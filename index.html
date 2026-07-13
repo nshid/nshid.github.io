@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  />
+
+  <title>WebRTC Debate Test</title>
+
+  <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #111827;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .setup {
+      max-width: 900px;
+      margin: 0 auto 24px;
+      padding: 20px;
+      background: #1f2937;
+      border-radius: 12px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      padding: 12px;
+      border: 0;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button:disabled {
+      background: #6b7280;
+      cursor: not-allowed;
+    }
+
+    #status {
+      margin-top: 15px;
+      min-height: 24px;
+      text-align: center;
+      color: #93c5fd;
+    }
+
+    .videos {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .participant {
+      position: relative;
+      overflow: hidden;
+      background: black;
+      border: 2px solid #374151;
+      border-radius: 12px;
+    }
+
+    .name {
+      padding: 10px;
+      background: #1f2937;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: black;
+      object-fit: cover;
+    }
+
+    #localVideo {
+      transform: scaleX(-1);
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      max-width: 500px;
+      margin: 24px auto;
+    }
+
+    .controls button {
+      background: #374151;
+    }
+
+    @media (max-width: 700px) {
+      .form-row,
+      .videos {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Debate Video Test</h1>
+
+  <section class="setup">
+    <div class="form-row">
+      <div>
+        <label for="roomName">Room name</label>
+        <input
+          id="roomName"
+          type="text"
+          value="test-debate-101"
+          placeholder="Enter the shared room name"
+        />
+      </div>
+
+      <div>
+        <label for="role">Your position</label>
+        <select id="role">
+          <option value="a">Debater A</option>
+          <option value="b">Debater B</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label for="displayName">Your display name</label>
+        <input
+          id="displayName"
+          type="text"
+          placeholder="Enter your name"
+        />
+      </div>
+
+      <div>
+        <label>&nbsp;</label>
+        <button id="joinButton">Join debate</button>
+      </div>
+    </div>
+
+    <div id="status">Enter your details and join the room.</div>
+  </section>
+
+  <main class="videos">
+    <section class="participant">
+      <div id="localName" class="name">You</div>
+      <video id="localVideo" autoplay muted playsinline></video>
+    </section>
+
+    <section class="participant">
+      <div id="remoteName" class="name">Waiting for opponent</div>
+      <video id="remoteVideo" autoplay playsinline></video>
+    </section>
+  </main>
+
+  <div class="controls">
+    <button id="muteButton" disabled>Mute microphone</button>
+    <button id="cameraButton" disabled>Turn camera off</button>
+  </div>
+
+  <script>
+    const joinButton = document.getElementById("joinButton");
+    const muteButton = document.getElementById("muteButton");
+    const cameraButton = document.getElementById("cameraButton");
+
+    const roomNameInput = document.getElementById("roomName");
+    const displayNameInput = document.getElementById("displayName");
+    const roleSelect = document.getElementById("role");
+
+    const localVideo = document.getElementById("localVideo");
+    const remoteVideo = document.getElementById("remoteVideo");
+
+    const localNameElement = document.getElementById("localName");
+    const remoteNameElement = document.getElementById("remoteName");
+    const statusElement = document.getElementById("status");
+
+    let peer = null;
+    let localStream = null;
+    let dataConnection = null;
+
+    function setStatus(message) {
+      statusElement.textContent = message;
+      console.log(message);
+    }
+
+    function cleanIdentifier(value) {
+      return value
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9-_]/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+    }
+
+    function getPeerIds() {
+      const room = cleanIdentifier(roomNameInput.value);
+      const role = roleSelect.value;
+
+      return {
+        ownId: `${room}-debater-${role}`,
+        opponentId: `${room}-debater-${role === "a" ? "b" : "a"}`
+      };
+    }
+
+    async function startCamera() {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        throw new Error(
+          "Camera access is unavailable. Use HTTPS or localhost."
+        );
+      }
+
+      localStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        },
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        }
+      });
+
+      localVideo.srcObject = localStream;
+    }
+
+    function showRemoteStream(stream) {
+      remoteVideo.srcObject = stream;
+
+      remoteVideo.play().catch((error) => {
+        console.warn("Remote video autoplay was blocked:", error);
+      });
+
+      setStatus("Connected to the other debater.");
+    }
+
+    function handleDataConnection(connection) {
+      dataConnection = connection;
+
+      connection.on("open", () => {
+        connection.send({
+          type: "profile",
+          displayName: displayNameInput.value.trim()
+        });
+      });
+
+      connection.on("data", (data) => {
+        if (data?.type === "profile" && data.displayName) {
+          remoteNameElement.textContent = data.displayName;
+        }
+      });
+
+      connection.on("close", () => {
+        remoteNameElement.textContent = "Opponent disconnected";
+      });
+
+      connection.on("error", (error) => {
+        console.error("Data connection error:", error);
+      });
+    }
+
+    function callOpponent(opponentId) {
+      setStatus("Calling the other debater...");
+
+      const call = peer.call(opponentId, localStream);
+
+      if (!call) {
+        setStatus("Could not start the call.");
+        return;
+      }
+
+      call.on("stream", showRemoteStream);
+
+      call.on("close", () => {
+        setStatus("The other debater disconnected.");
+        remoteVideo.srcObject = null;
+      });
+
+      call.on("error", (error) => {
+        console.error("Call error:", error);
+        setStatus(`Call error: ${error.message}`);
+      });
+
+      const connection = peer.connect(opponentId, {
+        reliable: true
+      });
+
+      handleDataConnection(connection);
+    }
+
+    function connectToOpponentWithRetry(opponentId) {
+      let attempts = 0;
+      const maximumAttempts = 30;
+
+      const interval = setInterval(() => {
+        attempts += 1;
+
+        if (
+          remoteVideo.srcObject ||
+          !peer ||
+          peer.destroyed ||
+          attempts > maximumAttempts
+        ) {
+          clearInterval(interval);
+
+          if (!remoteVideo.srcObject && attempts > maximumAttempts) {
+            setStatus(
+              "Opponent was not found. Make sure they selected the opposite position."
+            );
+          }
+
+          return;
+        }
+
+        callOpponent(opponentId);
+      }, 2000);
+    }
+
+    async function joinDebate() {
+      const roomName = cleanIdentifier(roomNameInput.value);
+      const displayName = displayNameInput.value.trim();
+
+      if (!roomName) {
+        setStatus("Enter a room name.");
+        return;
+      }
+
+      if (!displayName) {
+        setStatus("Enter your display name.");
+        return;
+      }
+
+      joinButton.disabled = true;
+
+      try {
+        setStatus("Requesting camera and microphone access...");
+        await startCamera();
+
+        localNameElement.textContent = `${displayName} — You`;
+
+        const { ownId, opponentId } = getPeerIds();
+
+        /*
+          With no host, port, or path options, PeerJS uses its
+          default free PeerJS Cloud signaling service.
+        */
+        peer = new Peer(ownId, {
+          debug: 2
+        });
+
+        peer.on("open", () => {
+          setStatus(
+            `Joined as ${roleSelect.options[roleSelect.selectedIndex].text}. Waiting for opponent...`
+          );
+
+          muteButton.disabled = false;
+          cameraButton.disabled = false;
+
+          connectToOpponentWithRetry(opponentId);
+        });
+
+        peer.on("call", (call) => {
+          setStatus("Opponent connected. Answering call...");
+
+          call.answer(localStream);
+
+          call.on("stream", showRemoteStream);
+
+          call.on("close", () => {
+            setStatus("The other debater disconnected.");
+            remoteVideo.srcObject = null;
+          });
+
+          call.on("error", (error) => {
+            console.error("Incoming call error:", error);
+            setStatus(`Call error: ${error.message}`);
+          });
+        });
+
+        peer.on("connection", handleDataConnection);
+
+        peer.on("disconnected", () => {
+          setStatus("Signaling connection lost. Attempting reconnection...");
+
+          if (!peer.destroyed) {
+            peer.reconnect();
+          }
+        });
+
+        peer.on("error", (error) => {
+          console.error("Peer error:", error);
+
+          if (error.type === "unavailable-id") {
+            setStatus(
+              "That debate position is already occupied. Choose the other position or change the room name."
+            );
+          } else {
+            setStatus(`Connection error: ${error.message}`);
+          }
+
+          joinButton.disabled = false;
+        });
+      } catch (error) {
+        console.error(error);
+        setStatus(`Unable to start: ${error.message}`);
+        joinButton.disabled = false;
+      }
+    }
+
+    muteButton.addEventListener("click", () => {
+      const audioTrack = localStream?.getAudioTracks()[0];
+
+      if (!audioTrack) {
+        return;
+      }
+
+      audioTrack.enabled = !audioTrack.enabled;
+
+      muteButton.textContent = audioTrack.enabled
+        ? "Mute microphone"
+        : "Unmute microphone";
+    });
+
+    cameraButton.addEventListener("click", () => {
+      const videoTrack = localStream?.getVideoTracks()[0];
+
+      if (!videoTrack) {
+        return;
+      }
+
+      videoTrack.enabled = !videoTrack.enabled;
+
+      cameraButton.textContent = videoTrack.enabled
+        ? "Turn camera off"
+        : "Turn camera on";
+    });
+
+    joinButton.addEventListener("click", joinDebate);
+
+    window.addEventListener("beforeunload", () => {
+      peer?.destroy();
+
+      localStream?.getTracks().forEach((track) => {
+        track.stop();
+      });
+    });
+  </script>
+</body>
+</html>
