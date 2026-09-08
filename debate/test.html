@@ -1,0 +1,239 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Live testing · Openfloor</title><link rel="icon" href="favicon.svg"><style>:root{color-scheme:dark;--bg:#090a0b;--panel:#111315;--line:#282b2e;--muted:#9ca3a9;--accent:#d4f879;--red:#ff6b6b}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f3f4f4;font:14px/1.5 'Segoe UI',Arial,sans-serif}button,input,select,textarea{font:inherit}button,a,input,select,textarea{outline-offset:4px}button{cursor:pointer;border:1px solid var(--line);border-radius:6px;background:#1b1e20;color:white;padding:9px 14px;font-weight:600}button:hover{border-color:#6c7378;background:#282d30}button:disabled{opacity:.4;cursor:not-allowed}button.primary,.primary{background:var(--accent);color:#161b0b;border-color:var(--accent)}button.ghost{background:transparent}a{color:inherit;text-decoration:none}a:hover{color:var(--accent)}input,select,textarea{background:#090b0c;border:1px solid #34383c;color:white;border-radius:5px;padding:10px;width:100%}textarea{resize:vertical;min-height:95px}label{display:block;color:#b8bec2;margin:12px 0 6px}h1,h2,h3,p{margin:0}h1{font-size:30px;letter-spacing:-1px;line-height:1.25}h2{font-size:18px}h3{font-size:15px}.muted,small{color:var(--muted)}small{font-size:12px}.accent{color:var(--accent)}.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.between{justify-content:space-between}.stack>*+*{margin-top:16px}.topbar{height:76px;border-bottom:1px solid var(--line);padding:0 4%;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;gap:11px;align-items:center;font-size:21px;font-weight:800;letter-spacing:-.6px}.logo{width:30px;height:30px;background:var(--accent);color:#13170b;display:grid;place-items:center;border-radius:7px;font-size:21px}.nav{display:flex;gap:26px;color:#a0a6aa}.nav .active{color:white}.shell{max-width:1480px;margin:auto;padding:32px 4%}.columns{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px}.eyebrow{text-transform:uppercase;letter-spacing:1.7px;font-size:11px;font-weight:700;color:var(--muted)}.feature{padding:26px;border:1px solid #3d4926;background:linear-gradient(110deg,#1c2315,#111510 65%,#141813);border-radius:9px;margin:23px 0}.feature h1{max-width:580px;margin:16px 0}.pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:4px 8px;border:1px solid var(--line);border-radius:4px;color:#bfc5c8;text-transform:uppercase;letter-spacing:.6px}.live{color:var(--accent);border-color:#485832}.dot{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}.timer{font-family:Consolas,monospace;font-size:34px;letter-spacing:2px}.toolbar{display:flex;justify-content:space-between;gap:12px;margin:22px 0 12px}.tabs{display:flex;gap:5px;flex-wrap:wrap}.tabs button{border-color:transparent;background:transparent;color:#a4abb0}.tabs button.selected{background:#22272a;color:white}.search{max-width:240px}.debate-row{display:grid;grid-template-columns:minmax(0,1fr) 105px;gap:18px;border-top:1px solid var(--line);padding:16px 4px}.debate-row summary{cursor:pointer;list-style:none}.debate-row summary::before{content:'›';float:left;margin-right:13px;color:#7b848a;font-size:20px;line-height:1}.debate-row details[open] summary::before{transform:rotate(90deg)}.debate-row h3{font-size:14px;font-weight:600;display:inline}.meta{margin:8px 0 0 22px;display:flex;gap:14px;align-items:center;color:#939da3;font-size:12px}.detail{margin:14px 0 0 22px;color:#aeb6bb;max-width:640px}.pod{border:1px solid var(--line);border-radius:8px;padding:19px;background:var(--panel);margin-bottom:18px}.pod h3{margin-bottom:16px}.group{padding:12px 0;border-top:1px solid #25282b;display:flex;justify-content:space-between}.group button{padding:0;background:none;border:none;font-weight:400}.ad{min-height:186px;background:linear-gradient(145deg,#22271a,#111410)}.ad h2{font-size:23px;line-height:1.3;margin:17px 0 12px}.chat{margin-top:26px;border:1px solid var(--line);border-radius:8px;overflow:hidden}.chat-head{padding:16px 18px;border-bottom:1px solid var(--line)}.messages{height:200px;overflow:auto;padding:16px 18px}.message{margin-bottom:12px;overflow-wrap:anywhere}.message b{color:#d9e8ba;font-size:12px}.message p{color:#b9c0c4;margin-top:3px;font-size:13px}.composer{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}.avatar{width:34px;height:34px;display:inline-grid;place-items:center;background:#30362a;color:#def2b4;font-weight:700;border-radius:50%;object-fit:cover}.member{display:flex;align-items:center;gap:10px;margin:14px 0;cursor:pointer}.foot{margin-top:24px;font-size:12px;color:#7d878d}.notice{padding:10px 14px;border:1px solid #384329;color:#b8cb9a;background:#161b12;border-radius:6px;font-size:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px}dialog{background:#141719;color:white;border:1px solid #3d454b;border-radius:12px;width:min(660px,94vw);max-height:90vh;padding:24px}dialog::backdrop{background:#000b;backdrop-filter:blur(4px)}dialog h2{font-size:23px;margin-bottom:6px}.dialog-actions{margin-top:22px;display:flex;justify-content:flex-end;gap:10px}.error{color:#ff8b8b;margin-top:12px}.check{display:flex;gap:9px;align-items:center}.check input{width:auto}.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#d4f879;color:#18200c;padding:13px 20px;border-radius:7px;z-index:20;max-width:90vw;box-shadow:0 10px 40px #0009}.room-grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:22px;margin-top:22px}.stage{display:grid;grid-template-columns:1fr 1fr;gap:15px}.seat{background:#020303;border:1px solid #303639;border-radius:8px;aspect-ratio:1.35;position:relative;overflow:hidden;display:grid;place-items:center}.seat.speaking{border:2px solid var(--accent)}.seat video{position:absolute;width:100%;height:100%;object-fit:cover}.identity{text-align:center}.identity .avatar{width:68px;height:68px;font-size:25px;margin-bottom:14px}.nameplate{position:absolute;bottom:14px;left:14px;background:#0b0e0dd9;padding:6px 10px;border-radius:5px}.rec{color:var(--red)}.blink{animation:blink 1s infinite}@keyframes blink{50%{opacity:.2}}.roundbar{padding:18px;background:#141819;border:1px solid var(--line);border-radius:7px;margin-bottom:16px}.rounds{display:flex;gap:5px;margin-top:12px}.rounds span{height:3px;background:#3a4145;flex:1}.rounds span.done{background:var(--accent)}.controls{justify-content:center;padding:18px}.lifeline{display:block;width:100%;text-align:left;margin-top:9px}.context{white-space:pre-wrap;color:#adb6bc;margin-top:12px}.subtopic{border-left:2px solid #536a32;margin:14px 0;padding-left:12px}.hidden{display:none!important}.empty{padding:40px;text-align:center;color:#a9b2b7}.recording-panel{border-color:#543131}progress{width:100%;accent-color:var(--accent)}@media(max-width:1050px){.columns,.room-grid{grid-template-columns:minmax(0,1fr) 260px}.nav{display:none}.shell{padding:23px}.topbar{padding:0 23px}.stage{grid-template-columns:1fr}.seat{aspect-ratio:1.8}}@media(max-width:760px){.columns,.room-grid{grid-template-columns:1fr}.shell{padding:20px 15px}.topbar{padding:0 15px}.topbar button{padding:7px 9px}.brand{font-size:18px}.toolbar{flex-wrap:wrap}.search{max-width:none}.feature{padding:20px}.feature h1{font-size:26px}.grid2{grid-template-columns:1fr}.debate-row{grid-template-columns:minmax(0,1fr) 86px;gap:6px}.meta{gap:8px;flex-wrap:wrap}.stage{grid-template-columns:1fr 1fr}.seat{aspect-ratio:1}.identity .avatar{width:48px;height:48px}.nameplate{font-size:11px;left:5px;bottom:5px}aside{margin-top:10px}}
+.topic-header{margin-top:22px}.topic-header h1{margin:8px 0 18px}.topic-progress{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.context-drawer{padding:13px 16px;border:1px solid var(--line);border-radius:6px}.context-drawer summary{cursor:pointer}.v2-stage{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.v2-stage .seat{aspect-ratio:1.2}.v2-stage.duel-view{grid-template-columns:1fr 1fr}.v2-stage.duel-view .seat{aspect-ratio:1.25}.v2-stage .identity .avatar{width:48px;height:48px;font-size:20px}.tile-top{position:absolute;z-index:2;top:0;left:0;right:0;padding:7px 9px;background:#000b;display:flex;justify-content:space-between;font-size:11px}.tile-timer{font-family:Consolas,monospace;color:var(--accent)}.member-list{display:grid;gap:9px;margin:14px 0}.member-list .row{justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:7px}.audio-clip{display:flex;flex-direction:column;padding:9px 0;border-bottom:1px solid var(--line)}#audio-clips{max-height:260px;overflow:auto}#ai-result{white-space:pre-wrap;font-size:13px;max-height:500px;overflow:auto;margin-top:14px}@media(min-width:1450px){.v2-stage{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:900px){.v2-stage{grid-template-columns:repeat(2,minmax(0,1fr))}.room-grid{grid-template-columns:1fr}.v2-stage.duel-view{grid-template-columns:1fr 1fr}}
+
+.score-card{margin-top:18px;border-top:1px solid #333;padding:12px 0}.score-row{display:flex;align-items:center;gap:10px;margin-top:12px}.score-row meter{flex:1;min-width:50px;accent-color:#d4f879}.score-row span:first-child{min-width:70px}.score-card ul{padding-left:20px;margin:8px 0}
+
+.entry-pod{max-width:640px;margin:40px auto}.waiting-fact{margin:18px 0;padding:15px 18px;background:#171d12;border:1px solid #384329;border-radius:8px}.waiting-fact .eyebrow{color:var(--accent)}.waiting-fact p{margin:9px 0;font-size:14px;line-height:1.6}.waiting-fact button{font-size:12px;padding:4px 8px}.waiting-fact small a{text-decoration:underline;text-underline-offset:3px}.tile-mic-status{position:absolute;z-index:3;right:8px;bottom:10px;display:flex;align-items:center;gap:5px;padding:5px 7px;border:1px solid #783f43;border-radius:5px;background:#291416ee;color:#ffabad;font-size:11px}.v2-stage .nameplate{max-width:calc(100% - 105px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:2}@media(max-width:480px){.tile-mic-status{bottom:7px;right:5px;padding:4px}.tile-mic-status>span{display:none}.v2-stage .nameplate{max-width:calc(100% - 38px);padding:5px}.entry-pod{margin:22px auto}}
+
+/* Shared layout: keep content readable and actions in view at every viewport. */
+html { scrollbar-gutter: stable; }
+body.modal-open { overflow: hidden; }
+[hidden] { display: none !important; }
+input, select, textarea, .row > *, .columns > *, .room-grid > *, .grid2 > * { min-width: 0; }
+button, .pill, .notice, .foot, .context, .detail, .member, .profile-bio, .profile-interests { overflow-wrap: anywhere; }
+h1, h2, h3, .member-list, .score-card { overflow-wrap: anywhere; }
+input[type="checkbox"] { flex: 0 0 16px; width: 16px; height: 16px; margin: 3px 0; accent-color: var(--accent); }
+.check { align-items: flex-start; line-height: 1.5; }
+.composer input { flex: 1; width: 0; }
+.composer button, .member .avatar { flex-shrink: 0; }
+.toolbar .tabs { min-width: 0; }
+.toolbar .search { flex: 1 1 180px; width: auto; }
+.account-nav { justify-content: flex-end; flex-wrap: nowrap; }
+.account-button { max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topbar .brand { flex-shrink: 0; white-space: nowrap; }
+.member > div { min-width: 0; }
+.score-row { flex-wrap: wrap; }
+.score-row meter { min-width: 80px; }
+#ai-result { white-space: normal; padding: 4px 6px 14px 0; scroll-padding-block: 12px; }
+.messages { scroll-padding-block: 16px; overscroll-behavior: contain; }
+.tile-top { gap: 8px; }
+.tile-top > :first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile-timer { flex-shrink: 0; }
+.identity { width: 100%; min-width: 0; padding: 34px 10px 48px; }
+.identity p { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v2-stage .identity .avatar { margin-bottom: 6px; }
+.controls { gap: 8px; padding: 16px 0; }
+.entry-pod { margin-block: 24px; }
+.entry-pod .waiting-fact { margin-top: 0; }
+.waiting-fact { overflow-wrap: anywhere; }
+
+/* Native dialog provides focus trapping, Escape and a true modal backdrop. */
+dialog {
+  width: min(560px, calc(100vw - 48px));
+  max-width: none;
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 24px 100px #0009;
+}
+dialog.dialog-wide { width: min(840px, calc(100vw - 48px)); }
+.dialog-form { display: flex; flex-direction: column; max-height: calc(100vh - 50px); max-height: calc(100dvh - 50px); min-height: 0; }
+.dialog-header { flex: none; display: flex; align-items: center; gap: 16px; justify-content: space-between; padding: 16px 20px 16px 24px; border-bottom: 1px solid var(--line); }
+.dialog-header h2 { margin: 0; font-size: 21px; line-height: 1.35; letter-spacing: -.4px; }
+.dialog-close { flex: 0 0 36px; width: 36px; height: 36px; display: grid; place-items: center; padding: 0; font-size: 25px; line-height: 1; background: transparent; border-color: transparent; }
+.dialog-scroll-frame { display: flex; min-height: 0; padding-block: 8px; overflow: hidden; }
+.dialog-body { flex: 1; min-width: 0; min-height: 0; overflow: auto; padding: 8px 24px 12px; scroll-padding-block: 20px; overscroll-behavior: contain; scrollbar-gutter: stable; overflow-wrap: anywhere; }
+.dialog-footer { flex: none; padding: 14px 24px; border-top: 1px solid var(--line); background: #16191b; }
+.dialog-actions { margin: 0; display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+.dialog-error { margin: 0 0 12px; line-height: 1.5; max-height: 6em; overflow: auto; overflow-wrap: anywhere; }
+.dialog-error:empty { display: none; }
+.dialog-body label { font-size: 13px; margin: 10px 0 0; }
+.dialog-body label > input:not([type="checkbox"]), .dialog-body label > select, .dialog-body label > textarea { display: block; margin-top: 5px; }
+.dialog-body label small { display: block; margin-top: 4px; }
+.dialog-body input, .dialog-body select, .dialog-body textarea { padding: 8px 10px; font-size: 14px; line-height: 1.4; }
+.dialog-body input[type="file"] { width: 100%; font-size: 12px; }
+.dialog-body input[type="file"]::file-selector-button { margin-right: 8px; border: 0; border-radius: 3px; padding: 4px 6px; background: #303638; color: #f3f4f4; }
+.dialog-body textarea { min-height: 80px; }
+.dialog-body .check { margin-block: 12px; }
+.dialog-body .foot, .field-help { margin-top: 12px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.dialog-body > :first-child { margin-top: 0; }
+.dialog-body .grid2 { gap: 8px 18px; }
+.settings-grid { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,1fr); gap: 24px; }
+.settings-section { min-width: 0; }
+.settings-section + .settings-section { border-left: 1px solid var(--line); padding-left: 24px; }
+.settings-section h3 { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+.settings-section textarea { height: 82px; }
+.settings-section .notification-button { width: 100%; font-size: 13px; margin-top: 2px; }
+.settings-tools { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 16px; margin-top: 10px; border-top: 1px solid var(--line); }
+.settings-tools > button { padding: 7px 11px; font-size: 12px; }
+.settings-tools .import-control { margin: 0; max-width: 240px; }
+.profile-heading { display: flex; align-items: center; gap: 14px; padding-block: 2px 10px; }
+.profile-heading .avatar { width: 52px; height: 52px; flex-shrink: 0; }
+.profile-bio { white-space: pre-wrap; margin: 8px 0 12px; }
+.profile-interests { margin: 10px 0 18px; }
+.dialog-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin: 0 0 16px; padding-bottom: 8px; }
+.dialog-tabs button { padding: 7px 14px; background: transparent; border-color: transparent; color: var(--muted); }
+.dialog-tabs button[aria-selected="true"] { color: var(--accent); background: #25301b; border-color: #3b4a29; }
+[role="tabpanel"] { min-width: 0; }
+.field-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 6px 0; }
+.field-heading label { margin: 0; }
+.field-heading button { padding: 4px 8px; font-size: 12px; }
+.draft-writing { margin-top: 10px; }
+.draft-writing textarea { height: 156px; min-height: 110px; }
+.access-options { margin-top: 12px; }
+
+/* Subtopics use the existing dialog tabs and one compact editor at a time. */
+.subtopic-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; font-size: 12px; }
+.subtopic-toolbar .row { gap: 6px; }
+.subtopic-toolbar button { padding: 6px 9px; font-size: 12px; }
+.subtopic-list { display: grid; gap: 4px; }
+.dialog-body [data-subtopics] > .field-help:last-child { margin: 8px 0 0; }
+.subtopic-card { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.subtopic-header { display: flex; align-items: center; min-width: 0; background: #16191b; }
+.subtopic-toggle { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; padding: 7px 10px; border: 0; border-radius: 0; background: transparent; text-align: left; font-size: 12px; }
+[data-subtopic-number] { flex: none; color: var(--muted); }
+[data-subtopic-heading] { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.subtopic-chevron { margin-left: auto; flex: none; }
+.subtopic-toggle[aria-expanded="true"] .subtopic-chevron { transform: rotate(180deg); }
+.subtopic-delete { display: grid; place-items: center; flex: 0 0 34px; width: 34px; height: 32px; padding: 0; border: 0; background: transparent; color: var(--muted); }
+.subtopic-delete:hover { color: #ff9d9d; background: #3b2323; }
+.subtopic-fields { padding: 0 12px 10px; border-top: 1px solid var(--line); }
+.dialog-body .subtopic-fields label { margin-top: 7px; font-size: 12px; }
+.dialog-body .subtopic-fields textarea { height: 66px; min-height: 66px; }
+.subtopic-empty { padding: 20px 14px; border: 1px dashed var(--line); border-radius: 6px; text-align: center; }
+[data-subtopic-error] { color: #ff9d9d; }
+
+@media (max-width: 760px) {
+  .topbar { height: auto; min-height: 76px; padding-block: 12px; flex-wrap: wrap; gap: 10px; }
+  .topbar .brand { font-size: 18px; gap: 8px; }
+  .topbar .brand .pill { display: none; }
+  .account-nav { margin-left: auto; gap: 6px; }
+  .account-button { max-width: 140px; }
+  .toolbar { gap: 10px; }
+  .toolbar .search { flex-basis: 100%; max-width: none; }
+  .debate-row { grid-template-columns: minmax(0,1fr) 102px; }
+  .debate-row .meta { grid-column: 1 / -1; }
+  .roundbar .timer { font-size: 28px; }
+  .room-grid { gap: 16px; }
+  .pod { padding: 16px; }
+}
+@media (max-width: 600px) {
+  dialog, dialog.dialog-wide { width: 100%; height: 100vh; height: 100dvh; max-height: none; margin: 0; border: 0; border-radius: 0; }
+  .dialog-form { height: 100%; max-height: 100%; }
+  .dialog-header { padding: calc(10px + env(safe-area-inset-top)) 12px 10px 18px; }
+  .dialog-header h2 { font-size: 20px; }
+  .dialog-close { width: 44px; height: 44px; flex-basis: 44px; }
+  .dialog-scroll-frame { flex: 1; padding-block: 8px; }
+  .dialog-body { padding: 8px 18px 16px; scrollbar-gutter: auto; }
+  .dialog-body input, .dialog-body textarea, .dialog-body select { font-size: 16px; }
+  .dialog-footer { padding: 12px 18px calc(12px + env(safe-area-inset-bottom)); }
+  .dialog-footer button { min-height: 44px; }
+  .settings-grid { grid-template-columns: minmax(0,1fr); gap: 20px; }
+  .settings-section + .settings-section { border-left: 0; padding: 18px 0 0; border-top: 1px solid var(--line); }
+  .dialog-body .grid2 { grid-template-columns: minmax(0,1fr); }
+  .dialog-tabs { gap: 4px; }
+  .dialog-tabs button { min-height: 42px; flex: 1; padding-inline: 8px; }
+  .settings-tools > button { min-height: 40px; }
+  .draft-writing textarea { height: 128px; }
+  .subtopic-toolbar { flex-wrap: wrap; }
+  .subtopic-toolbar .row { margin-left: auto; }
+  .subtopic-toolbar button, .subtopic-toggle, .subtopic-delete { min-height: 44px; }
+  .subtopic-delete { width: 44px; flex-basis: 44px; }
+  .dialog-body .subtopic-fields textarea { height: 90px; }
+  .toast { bottom: calc(16px + env(safe-area-inset-bottom)); width: max-content; }
+  .identity { padding: 30px 8px 40px; }
+}
+@media (max-width: 380px) {
+  .account-nav { width: 100%; justify-content: flex-end; }
+  .account-button { max-width: 200px; }
+  .v2-stage .identity .avatar { width: 38px; height: 38px; font-size: 17px; }
+  .v2-stage .identity p { font-size: 12px; }
+}
+@media (min-width:601px){.dialog-wide [role="tabpanel"]{min-height:358px}}
+@media (max-width:600px){html:has(dialog[open]){scrollbar-gutter:auto}dialog,dialog.dialog-wide{width:100vw}.settings-section textarea{height:140px}.v2-stage .seat,.v2-stage.duel-view .seat{aspect-ratio:1 / 1.05}.v2-stage .identity .avatar{width:40px;height:40px;font-size:18px}}
+
+.entry-context{margin-top:16px;border-block:1px solid var(--line);padding-block:12px}.entry-context summary{cursor:pointer;color:var(--muted)}.score-card .foot{margin-top:7px;margin-bottom:12px}.score-card .score-row{font-size:12px}
+
+/* Expanded summaries use the full row; Join stays beside the title. */
+.debate-row{row-gap:8px}.debate-row details{grid-column:1 / -1;grid-row:1;min-width:0}.debate-row summary{min-height:40px;padding-right:124px}.debate-row-action{grid-column:2;grid-row:1;align-self:start;z-index:1}.debate-row .meta{grid-column:1 / -1}@media(max-width:760px){.debate-row summary{padding-right:114px}}
+
+@media(max-width:600px){.topic-header h1,.entry-pod h1{font-size:24px;line-height:1.3}}
+
+/* Preserve camera geometry while people hide their tiles. */
+.v2-stage .tile-placeholder{border:1px dashed #49514b;background:transparent;color:var(--muted);text-align:center;padding:12px}
+.tile-placeholder div>span{display:block;font-size:28px;color:#718361;margin-bottom:7px}.tile-placeholder p{font-size:13px}.tile-placeholder small{font-size:11px}
+.tile-status{display:flex;align-items:flex-end;flex-direction:column;min-width:0;line-height:1.45}.tile-timer:empty{display:none}.tile-listening{color:var(--accent);font-size:10px}.tile-listening.not-listening{color:#b2b8bb}.tile-top{gap:6px;align-items:flex-start}
+.viewer-identity{min-height:48px;margin-bottom:14px;padding:7px 10px;border:1px solid var(--line);border-radius:6px;color:var(--muted);font-size:12px}.viewer-identity button{font-size:12px;padding:6px 10px}
+#spectator-privacy{padding:3px 12px 12px;border:1px solid var(--line);border-radius:6px;margin:14px 0}#spectator-privacy[hidden]{display:none}
+.controls button{min-width:110px}.controls{gap:8px;padding-inline:0}
+
+#hide-btn{width:140px}#mic-btn,#room-audio-btn{width:120px}.anonymous-avatar{font-size:30px!important}
+
+.bot-writing{grid-template-columns:minmax(0,1fr)}.bot-pod{margin-top:16px}.bot-reply{max-height:240px;overflow:auto;white-space:pre-wrap;padding:12px 0;scrollbar-gutter:stable}.bot-pod .row{margin-top:10px}.bot-badge{color:var(--accent)}
+/* Small functional additions within the locked visual style. */
+.avatar-settings{display:flex;align-items:center;gap:12px;margin-top:10px}.avatar-settings>label{flex:1;margin:0}.avatar-settings .avatar{width:44px;height:44px}.avatar-settings #settings-avatar-preview{flex:none}
+.account-wrap{position:relative;display:inline-flex;align-items:center;min-width:0}.account-wrap .account-button{padding-right:18px}.unread-badge{position:absolute;top:-6px;right:-3px;min-width:21px;height:21px;padding:0 5px;border-radius:50%;background:var(--accent);color:#111;font-size:10px;line-height:19px;border:1px solid #111}.admin-mark{font-size:9px;color:var(--accent);margin-left:2px;vertical-align:super}
+.device-controls{display:inline-flex;gap:3px;flex:none}.icon-button{display:inline-grid;place-items:center;min-width:30px;height:32px;padding:5px;background:transparent;color:var(--muted)}.icon-button:hover{color:var(--accent)}
+.inbox-tabs{padding:8px;display:flex;flex-wrap:wrap;gap:4px;max-height:150px;overflow:auto}.chat-unread{display:inline-grid;place-items:center;min-width:17px;height:17px;padding:0 4px;border-radius:20px;background:var(--accent);color:#111;font-size:10px}
+.admin-list{margin-top:16px}.admin-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line)}.admin-row>span{min-width:0;overflow-wrap:anywhere}.admin-row button{flex:none;color:#ff9d9d}
+.grade-button{cursor:pointer;text-decoration:underline;text-underline-offset:4px}.grade-button:focus-visible{outline:2px solid var(--accent);outline-offset:4px}.grade-scale{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.grade-band{display:grid;grid-template-columns:32px 1fr;gap:3px 8px;padding:8px;border:1px solid var(--line);border-radius:5px;font-size:12px}.grade-band small{grid-column:1 / -1;font-size:11px}.grade-band.selected{border-color:var(--accent);background:#25301b}.grade-band b{color:var(--accent)}
+#v2-interrupt{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+@media(max-width:600px){.grade-scale{grid-template-columns:repeat(2,minmax(0,1fr))}.account-nav{flex-wrap:wrap}.icon-button{min-width:38px;height:40px}.account-button{max-width:120px}.admin-row button{min-width:44px;height:44px}}
+
+.bot-avatar{background:color-mix(in srgb,var(--bot-color) 22%,#111315);border:2px solid var(--bot-color);box-shadow:0 0 16px color-mix(in srgb,var(--bot-color) 18%,transparent);font-size:30px}
+
+.test-item{padding:18px;border:1px solid var(--border,#303536);border-radius:10px;margin:16px 0}.test-item h3{font-size:14px;line-height:1.5}.test-actions{display:grid;grid-template-columns:1fr 1fr;gap:24px}.test-actions input{width:auto}.test-actions p,.test-actions li{overflow-wrap:anywhere;white-space:pre-wrap}.test-actions label{display:inline-flex;gap:8px;align-items:center}.test-actions ul{padding-left:18px}.test-actions button{padding:6px 10px}#test-comment{max-width:560px}#test-comment header,#test-comment footer,#test-comment .modal-content{padding:16px}#test-comment header{display:flex;justify-content:space-between}#test-comment textarea{width:100%}@media(max-width:600px){.test-actions{grid-template-columns:1fr}.test-item{padding:12px}}</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head><body><header class="topbar"><a href="index.html">Openfloor ↗</a><span>Live testing</span></header><main class="shell"><h1>Live testing checklist</h1><p>Record what you actually tested on the live site. Your check is separate from admin verification. Comments are visible to signed-in testers.</p><button id="refresh-tests">Refresh results</button><p id="test-status" role="status">Connecting…</p><div id="tests"></div></main><dialog id="test-comment"></dialog><script>// Public client configuration. This key grants only the access allowed by database policies.
+const SUPABASE_CONFIG = Object.freeze({
+  url: 'https://tcntbgpofttsskukopin.supabase.co',
+  publishableKey: 'sb_publishable_5fOJwPOQcRDtURVzXPGhgQ_mCptva1y'
+});
+
+const liveCatalog=[{"group":"Accounts","status":"VERIFIED LIVE","behavior":"Signup email arrives; confirmation, password reset, username sign-in and password change work against deployed Supabase.","verifiedBy":"User report, September 7, 2026","note":"Confirmed before the current issue fixes; affected updated flows still need a deployment smoke check.","id":"6a9808a349f27a052a500e81"},{"group":"Administration","status":"VERIFIED LIVE","behavior":"Initial admin grant succeeds; only existing admins can promote users on the deployed database.","verifiedBy":"User report, September 7, 2026","note":"Confirmed before the current issue fixes; affected updated flows still need a deployment smoke check.","id":"5ef7bcf78b58825b0d9f0cfd"},{"group":"Dashboard","status":"VERIFIED IN BROWSER","behavior":"Black theme, small readable text, expanded rows and sidebar remain usable on desktop and mobile.","verifiedBy":"User report, September 7, 2026","note":"Confirmed before the current issue fixes; affected updated flows still need a deployment smoke check.","id":"139063ff02e898cb67745491"},{"group":"Lobby","status":"NEEDS LIVE RETEST","behavior":"Two devices exchange group/private messages, open profiles and create working challenge links.","note":"User reported missing private conversations. Inbox and unread fixes prepared locally.","id":"950271038668db6cfebb451f"},{"group":"Notifications","status":"NOT VERIFIED LIVE","behavior":"Scheduled/popular reminders obey user settings and are suppressed in every active debate tab.","id":"14bc6a0b915526c565d08791"},{"group":"Room access","status":"NOT VERIFIED LIVE","behavior":"Actual deployed public/unlisted/password rooms enforce spectator capacity, duplicate-tab prevention and one-room-per-account leases.","id":"284c58208b150531d926c123"},{"group":"Media","status":"NOT VERIFIED LIVE","behavior":"Real remote cameras/audio connect across networks and browser permissions; hosts/opponents remain pinned in the eight-tile rotation.","id":"cbc8157afb85a4f9ac25e291"},{"group":"Media","status":"VERIFIED LIVE","behavior":"Camera Off retains tile eligibility; Hide removes lobby tiles; Start restores debaters; all connected audio remains audible when off-screen.","verifiedBy":"User report, September 7, 2026","note":"Confirmed before the current issue fixes; affected updated flows still need a deployment smoke check.","id":"32327d3ac83b8c02f5f65095"},{"group":"Agreement","status":"VERIFIED LIVE","behavior":"Multiple browsers see proposed topic/context/subtopic changes and readiness resets, and all required opponents approve before start.","verifiedBy":"User report, September 7, 2026","note":"Confirmed before the current issue fixes; affected updated flows still need a deployment smoke check.","id":"a34e0888e449a5bedbf8e926"},{"group":"Debate timing","status":"NOT VERIFIED LIVE","behavior":"Shared phase/subtopic and per-person clocks stay aligned across devices; the selected/random first speaker follows the schedule.","id":"3c0314c1ec31a1c3bf4f5e69"},{"group":"Lifelines","status":"NOT VERIFIED LIVE","behavior":"Real microphones obey turn changes and spacebar interruption budgets; definition/source limits and spectator restrictions work in browsers.","id":"1010d163dcbe12127d39752a"},{"group":"Recording","status":"NOT VERIFIED LIVE","behavior":"Each browser records separate audio segments, blinking tab indicator, optional video, local downloads and manifest through debate end.","id":"6c99da00eca1ee2c21f09c8e"},{"group":"AI services","status":"NOT VERIFIED LIVE","behavior":"Deployed Groq receives audio and saves word timestamps; Gemini returns rubric-valid reviews from complete transcripts.","id":"7932991b40859ce77623adfb"},{"group":"Results","status":"NOT VERIFIED LIVE","behavior":"Real spectators vote, final results are saved once, grades update and profile privacy is enforced by the deployed policies.","id":"93a050d41b0b33895ac9b139"},{"group":"AI quality","status":"NOT VERIFIED LIVE","behavior":"Human review of representative recordings validates grades, citations, gibberish/filibustering judgments and false-positive interruption rates.","id":"b0a78e1a93dd18ca36ee244d"},{"group":"AI drafting","status":"NOT IMPLEMENTED","behavior":"Magic topic/context/subtopic buttons use a real AI provider; current buttons use clearly labeled local templates.","id":"5ef2e0b8cfe5ecc92ac71bf3"},{"group":"Ongoing debates","status":"NOT IMPLEMENTED","behavior":"Automatic week-long queue/vote matching and separate recording/verdict identities for each repeated match.","id":"ef19edfd9b3b6d74f903ae99"},{"group":"Large rooms","status":"NOT IMPLEMENTED","behavior":"Media-server-enforced muting and scalable subscriptions; current media is a browser mesh with eight visible tiles.","id":"75aeeaa7033be09588aecb49"},{"group":"Appeals","status":"INTENTIONALLY DISABLED","behavior":"Appeal submission sends an admin review request/email; user requested a disabled placeholder for now.","id":"b80c02ba6288d00eec97e4ce"},{"group":"Bot practice","status":"NEEDS LIVE RETEST","behavior":"Configured STT transcribes all three human turns, the bot responds and speaks across supported browsers, spectators hear it, and final practice grades leave global grades unchanged.","note":"User observed Unknown action. Deployed debate-ai must include the bot action; updated error guidance prepared locally.","id":"f9cfc2f56c33fcdd54df1f77"},{"group":"Moderation","status":"NOT VERIFIED LIVE","behavior":"Admins restrict non-admin debating for every supported duration; long bans require justification; private notice arrives; chat and spectating remain available; expiry and lifting restore debate access.","id":"caad2572c019c0ef55d1d6fa"},{"group":"Shared live checklist","status":"NOT VERIFIED LIVE","behavior":"Two accounts see shared checks and comments; each controls their own results; only admins can verify or leave admin comments.","id":"0eae77331c5086111784bad6"}];
+/* Shared live acceptance board. No secrets and no client-authorized admin writes. */
+const testClient=window.supabase.createClient(SUPABASE_CONFIG.url,SUPABASE_CONFIG.publishableKey,{auth:{storageKey:'openfloor.supabase.auth',persistSession:true,autoRefreshToken:true}});
+const escapeTest=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let tester=null,testAdmin=false,testResults=[],testVerifications=[],testProfiles=[],testLoading=false;
+const testName=id=>testProfiles.find(p=>p.id===id)?.alias||'Former user';
+const testKey=item=>item.id;
+async function refreshTests(){
+ if(testLoading||document.querySelector('dialog[open]'))return;testLoading=true;
+ try{
+  const {data,error}=await testClient.auth.getSession();if(error)throw error;tester=data.session?.user;
+  if(!tester){document.querySelector('#tests').innerHTML='<p>Sign in on the <a href="index.html">dashboard</a>, then return here to record or review live checks.</p>';return}
+  const responses=await Promise.all([testClient.rpc('is_admin'),testClient.from('live_test_results').select('*'),testClient.from('live_test_verifications').select('*'),testClient.from('profiles').select('id,alias')]);
+  for(const r of responses)if(r.error)throw r.error;
+  [testAdmin,testResults,testVerifications,testProfiles]=responses.map(r=>r.data);renderTests();document.querySelector('#test-status').textContent='Signed in as '+testName(tester.id)+' · Updated '+new Date().toLocaleTimeString();
+ }catch(e){document.querySelector('#test-status').textContent='Could not load shared checks: '+e.message}finally{testLoading=false}
+}
+function renderTests(){
+ document.querySelector('#tests').innerHTML=liveCatalog.map(item=>{
+  const key=testKey(item),rows=testResults.filter(r=>r.item===key),mine=rows.find(r=>r.user_id===tester.id),verify=testVerifications.find(r=>r.item===key);
+  return `<article class="test-item"><div><small>${escapeTest(item.group)}</small><h3>${escapeTest(item.behavior)}</h3><p class="field-help">Catalog: ${escapeTest(item.status)}${item.verifiedBy?' · '+escapeTest(item.verifiedBy):''}</p>${item.note?'<p class="field-help">'+escapeTest(item.note)+'</p>':''}</div><div class="test-actions"><section><label><input type="checkbox" data-check="${key}" ${mine?.checked?'checked':''}> I checked this</label><button type="button" data-comment="${key}" aria-label="Comment on my test">💬</button><ul>${rows.map(r=>'<li>'+escapeTest(testName(r.user_id))+' · '+(r.checked?'Checked':'Unchecked')+(r.comment?'<p>'+escapeTest(r.comment)+'</p>':'')+'</li>').join('')||'<li>No tester results yet.</li>'}</ul></section><section><label><input type="checkbox" data-admin-check="${key}" ${verify?.verified?'checked':''} ${testAdmin?'':'disabled'}> Admin verified</label><button type="button" data-admin-comment="${key}" aria-label="Admin verification comment" ${testAdmin?'':'disabled'}>💬</button><p>${verify?escapeTest(testName(verify.user_id))+' · '+(verify.verified?'Verified':'Not verified'):'Awaiting admin verification'}</p>${verify?.comment?'<p>'+escapeTest(verify.comment)+'</p>':''}</section></div></article>`;
+ }).join('');
+ document.querySelectorAll('[data-check],[data-admin-check]').forEach(el=>el.onchange=async()=>{const admin=el.hasAttribute('data-admin-check'),key=admin?el.dataset.adminCheck:el.dataset.check;await saveTest(key,el.checked,currentTest(key,admin)?.comment||'',admin)});
+ document.querySelectorAll('[data-comment],[data-admin-comment]').forEach(el=>el.onclick=()=>{const admin=el.hasAttribute('data-admin-comment');commentTest(admin?el.dataset.adminComment:el.dataset.comment,admin)});
+}
+function currentTest(key,admin){return admin?testVerifications.find(r=>r.item===key):testResults.find(r=>r.item===key&&r.user_id===tester.id)}
+async function saveTest(key,checked,comment,admin){
+ try{const {error}=await testClient.rpc('save_live_test',{p_item:key,p_checked:checked,p_comment:comment,p_admin:admin});if(error)throw error;document.querySelector('#test-comment')?.close();await refreshTests()}
+ catch(e){document.querySelector('#test-status').textContent='Not saved: '+e.message;renderTests()}
+}
+function commentTest(key,admin){
+ if(admin&&!testAdmin)return;const row=currentTest(key,admin),dialog=document.querySelector('#test-comment');
+ dialog.innerHTML='<form><header><h2>'+(admin?'Admin verification comment':'Your test comment')+'</h2><button type="button" aria-label="Close" onclick="this.closest(\'dialog\').close()">×</button></header><div class="modal-content"><label>Comment<textarea name="comment" maxlength="2000" rows="5">'+escapeTest(row?.comment||'')+'</textarea></label></div><footer><button>Save comment</button></footer></form>';
+ dialog.querySelector('form').onsubmit=e=>{e.preventDefault();saveTest(key,admin?!!row?.verified:!!row?.checked,new FormData(e.target).get('comment'),admin)};dialog.showModal();
+}
+document.querySelector('#refresh-tests').onclick=refreshTests;
+testClient.auth.onAuthStateChange(()=>setTimeout(refreshTests,0));refreshTests();setInterval(()=>{if(!document.hidden)refreshTests()},15000);
+</script></body></html>
