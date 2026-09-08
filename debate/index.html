@@ -212,6 +212,8 @@ dialog.dialog-wide { width: min(840px, calc(100vw - 48px)); }
 }
 
 button.device-controls{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:56px}
+
+#mic-btn.mic-locked{display:inline-grid;place-items:center;flex:0 0 44px;width:44px;min-width:44px;min-height:44px;padding:7px;line-height:1}.mic-lock-icon{display:block}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head><body><header class="topbar"></header><main class="shell" id="app"></main><script>// Public client configuration. This key grants only the access allowed by database policies.
 const SUPABASE_CONFIG = Object.freeze({
   url: 'https://tcntbgpofttsskukopin.supabase.co',
@@ -609,7 +611,19 @@ function v2Tiles(){
 function v2Tick(){if(!roomJoined||!$('#round-time'))return;const now=roomNow(),s=roomV2.session,r=v2Round(),m=currentMember();$('#round-time').textContent=r?minutes(Math.ceil((r.endsAt-now)/1000)):s.phase==='ended'?'00:00':s.startedAt>now?minutes(Math.ceil((s.startedAt-now)/1000)):'--:--';for(let tile of $('#camera-stage').children){const person=roomV2.members.find(m=>m.user_id===tile.dataset.user);if(!person)continue;tile.querySelector('.tile-timer').textContent=RoomRules.maySpeak(person,room,s,now)&&r?minutes(Math.ceil((r.endsAt-now)/1000)):''}
  if(role!=='viewer'&&!botPractice()){const budget={interruptMs:120000,definitions:3,source:1,...s.budgets?.[identity()]};const remaining=budget.interruptMs+(s.interrupt?.user_id===identity()?Math.max(0,s.interrupt.endsAt-now):0);$('#v2-interrupt-time').textContent=minutes(remaining/1000);$('#v2-interrupt').disabled=!roomV2.hold&&!RoomRules.canInterrupt(m,room,s,now);$('#v2-definition-count').textContent=budget.definitions;$('#v2-source-count').textContent=budget.source;$('#v2-definition').disabled=s.phase!=='active'||!budget.definitions;$('#v2-source').disabled=s.phase!=='active'||!budget.source}
  v2ApplyMic();if((s.phase==='ended'||s.endsAt&&now>=s.endsAt)&&roomV2.videoRecorder?.state==='recording')v2ToggleVideo();if(!botPractice()&&s.phase==='active'&&now>=s.startedAt&&now<s.endsAt&&role!=='viewer'&&roomV2.outgoing&&!roomV2.recording&&!roomV2.stopCapture)v2StartCapture();if((s.phase==='ended'||s.endsAt&&now>=s.endsAt)&&roomV2.recording)v2StopCapture();botTick();}
-function v2ApplyMic(){const allowed=mediaAccess().microphone&&roomJoined&&RoomRules.maySpeak(currentMember(),room,roomV2.session,roomNow())&&!manualMute;roomV2.outgoing?.getAudioTracks().forEach(t=>t.enabled=allowed);if($('#mic-btn'))$('#mic-btn').textContent=!RoomRules.maySpeak(currentMember(),room,roomV2.session,roomNow())?'🔒 Mic locked':manualMute?'Unmute mic':'Mute mic';if($('#mic-btn')){$('#mic-btn').setAttribute('aria-pressed',String(manualMute));$('#mic-btn').title=roomV2.outgoing?'Toggle your microphone':'Set your mic preference; enable media to send audio'}v2UpdateMicBadges();v2ShareMic()}
+function v2ApplyMic(){
+ const locked=!RoomRules.maySpeak(currentMember(),room,roomV2.session,roomNow()),allowed=mediaAccess().microphone&&roomJoined&&!locked&&!manualMute;
+ roomV2.outgoing?.getAudioTracks().forEach(t=>t.enabled=allowed);
+ const button=$('#mic-btn');if(button){
+  const label=locked?'Microphone locked by debate rules':manualMute?'Unmute mic':'Mute mic';
+  button.classList.toggle('mic-locked',locked);button.setAttribute('aria-label',label);button.setAttribute('aria-pressed',String(manualMute));
+  if(locked)button.innerHTML='<svg class="mic-lock-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="7" y="2" width="6" height="12" rx="3"/><path d="M3 10v2a7 7 0 0 0 14 0v-2M10 19v5m-4 0h8"/><rect x="15" y="14" width="12" height="13" rx="3" fill="#1d2123" stroke="none"/><g stroke="#ffd27d"><path d="M18 19v-3a3 3 0 0 1 6 0v3"/><rect x="16" y="19" width="10" height="7" rx="2" fill="#1d2123"/><path d="M21 21v3"/></g></svg>';
+  else button.textContent=label;
+  button.title=locked?label:roomV2.outgoing?'Toggle your microphone':'Set your mic preference; enable media to send audio';
+ }
+ v2UpdateMicBadges();v2ShareMic();
+}
+
 async function v2EnableMedia(kind='both'){
  if(roomV2.enablingMedia)return;roomV2.enablingMedia=true;
  try{
