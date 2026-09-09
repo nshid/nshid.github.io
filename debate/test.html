@@ -227,6 +227,12 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 
 .dashboard-page{padding-bottom:calc(70px + env(safe-area-inset-bottom))}.site-footer{position:fixed;bottom:0;left:0;right:0;z-index:10;margin:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:11px;line-height:1.5;text-align:center}.dashboard-page .toast{bottom:75px}
 
+.account-loading{display:inline-flex;align-items:center;justify-content:center;min-width:240px;min-height:42px;color:var(--muted);font-size:12px}.startup-loading{min-height:50vh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;text-align:center;padding:24px}@media(max-width:600px){.account-loading{min-width:130px}}
+
+.room-chat-tab{position:fixed;right:0;top:46%;z-index:12;width:auto;margin:0;padding:12px 8px;writing-mode:vertical-rl;border-radius:8px 0 0 8px;box-shadow:0 3px 18px #0006}
+.room-chat-panel{position:fixed;z-index:11;right:44px;top:100px;bottom:16px;width:310px;max-width:calc(100% - 56px);margin:0;display:flex;flex-direction:column;box-shadow:0 8px 32px #0009}
+.room-chat-panel .messages{height:auto;min-height:0;flex:1}.room-chat-panel .chat-head,.room-chat-panel .composer{flex-shrink:0}
+
 .test-table-wrap{overflow:auto;margin-top:16px;border:1px solid var(--line);border-radius:8px}
 .test-table{table-layout:fixed;width:100%;border-collapse:collapse;font-size:12px;min-width:800px}
 .test-table th,.test-table td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
