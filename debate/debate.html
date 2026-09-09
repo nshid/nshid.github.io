@@ -225,7 +225,7 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 .room-chat-panel{margin-top:8px;background:var(--panel)}
 .room-chat-panel .chat-head{display:flex;justify-content:space-between;padding:10px 12px}.room-chat-panel .messages{height:260px;overflow:auto;overscroll-behavior:contain}.room-chat-panel .composer{padding:10px;display:flex;gap:6px}.room-chat-panel .composer input{min-width:0}.room-chat-panel .composer button{flex-shrink:0}
 
-.has-site-footer{padding-bottom:calc(70px + env(safe-area-inset-bottom))}.site-footer{position:fixed;bottom:0;left:0;right:0;z-index:10;margin:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:11px;line-height:1.5;text-align:center}.has-site-footer .toast{bottom:75px}
+.has-site-footer{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}.has-site-footer>.topbar{flex-shrink:0}.has-site-footer>main.shell{flex:1 0 auto;width:100%;margin:0 auto}.site-footer{flex-shrink:0;margin:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:11px;line-height:1.5;text-align:center}
 
 .account-loading{display:inline-flex;align-items:center;justify-content:center;min-width:240px;min-height:42px;color:var(--muted);font-size:12px}.startup-loading{min-height:50vh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;text-align:center;padding:24px}@media(max-width:600px){.account-loading{min-width:130px}}
 
@@ -235,7 +235,7 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 
 #ai-result{scroll-margin-top:24px}
 
-.has-site-footer .room-chat-panel{bottom:calc(70px + env(safe-area-inset-bottom))}
+
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script></head><body class="has-site-footer"><header class="topbar"></header><main class="shell" id="app"></main><footer class="site-footer">Openfloor · Live human and bot debates, AI-powered · Copyright <span id="copyright-year">2026</span></footer><script>document.querySelector("#copyright-year").textContent=new Date().getFullYear();
 // Public client configuration. This key grants only the access allowed by database policies.
 const SUPABASE_CONFIG = Object.freeze({
