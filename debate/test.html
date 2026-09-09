@@ -225,7 +225,7 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 .room-chat-panel{margin-top:8px;background:var(--panel)}
 .room-chat-panel .chat-head{display:flex;justify-content:space-between;padding:10px 12px}.room-chat-panel .messages{height:260px;overflow:auto;overscroll-behavior:contain}.room-chat-panel .composer{padding:10px;display:flex;gap:6px}.room-chat-panel .composer input{min-width:0}.room-chat-panel .composer button{flex-shrink:0}
 
-.dashboard-page{padding-bottom:calc(70px + env(safe-area-inset-bottom))}.site-footer{position:fixed;bottom:0;left:0;right:0;z-index:10;margin:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:11px;line-height:1.5;text-align:center}.dashboard-page .toast{bottom:75px}
+.has-site-footer{padding-bottom:calc(70px + env(safe-area-inset-bottom))}.site-footer{position:fixed;bottom:0;left:0;right:0;z-index:10;margin:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:11px;line-height:1.5;text-align:center}.has-site-footer .toast{bottom:75px}
 
 .account-loading{display:inline-flex;align-items:center;justify-content:center;min-width:240px;min-height:42px;color:var(--muted);font-size:12px}.startup-loading{min-height:50vh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;text-align:center;padding:24px}@media(max-width:600px){.account-loading{min-width:130px}}
 
@@ -234,6 +234,8 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 .room-chat-panel .messages{height:auto;min-height:0;flex:1}.room-chat-panel .chat-head,.room-chat-panel .composer{flex-shrink:0}
 
 #ai-result{scroll-margin-top:24px}
+
+.has-site-footer .room-chat-panel{bottom:calc(70px + env(safe-area-inset-bottom))}
 
 .test-table-wrap{overflow:auto;margin-top:16px;border:1px solid var(--line);border-radius:8px}
 .test-table{table-layout:fixed;width:100%;border-collapse:collapse;font-size:12px;min-width:800px}
@@ -246,7 +248,8 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 .test-inline{display:flex;align-items:center;gap:6px;min-height:28px}.test-inline input{width:16px;height:16px;flex:none;margin:0}.test-inline button{padding:3px 6px;flex:none}.test-comment-preview{color:var(--muted);font-size:11px;max-width:100%}
 #test-comment{max-width:560px}#test-comment header,#test-comment footer,#test-comment .modal-content{padding:16px}#test-comment header{display:flex;justify-content:space-between}#test-comment textarea{width:100%}
 @media(max-width:600px){.test-table th,.test-table td{padding:8px}.test-inline button{min-height:36px}}
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head><body><header class="topbar"><a href="index.html">Openfloor ↗</a><span>Live testing</span></header><main class="shell"><h1>Live testing checklist</h1><p>Record what you actually tested on the live site. Your check is separate from admin verification. Comments are visible to signed-in testers.</p><button id="refresh-tests">Refresh results</button><p id="test-status" role="status">Connecting…</p><div id="tests"></div></main><dialog id="test-comment"></dialog><script>// Public client configuration. This key grants only the access allowed by database policies.
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head><body class="has-site-footer"><header class="topbar"><a href="index.html">Openfloor ↗</a><span>Live testing</span></header><main class="shell"><h1>Live testing checklist</h1><p>Record what you actually tested on the live site. Your check is separate from admin verification. Comments are visible to signed-in testers.</p><button id="refresh-tests">Refresh results</button><p id="test-status" role="status">Connecting…</p><div id="tests"></div></main><footer class="site-footer">Openfloor · Live human and bot debates, AI-powered · Copyright <span id="copyright-year">2026</span></footer><dialog id="test-comment"></dialog><script>document.querySelector("#copyright-year").textContent=new Date().getFullYear();
+// Public client configuration. This key grants only the access allowed by database policies.
 const SUPABASE_CONFIG = Object.freeze({
   url: 'https://tcntbgpofttsskukopin.supabase.co',
   publishableKey: 'sb_publishable_5fOJwPOQcRDtURVzXPGhgQ_mCptva1y'
