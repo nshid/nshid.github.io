@@ -232,6 +232,8 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 .room-chat-tab{position:fixed;right:0;top:46%;z-index:12;width:auto;margin:0;padding:12px 8px;writing-mode:vertical-rl;border-radius:8px 0 0 8px;box-shadow:0 3px 18px #0006}
 .room-chat-panel{position:fixed;z-index:11;right:44px;top:100px;bottom:16px;width:310px;max-width:calc(100% - 56px);margin:0;display:flex;flex-direction:column;box-shadow:0 8px 32px #0009}
 .room-chat-panel .messages{height:auto;min-height:0;flex:1}.room-chat-panel .chat-head,.room-chat-panel .composer{flex-shrink:0}
+
+#ai-result{scroll-margin-top:24px}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head><body><header class="topbar"></header><main class="shell" id="app"></main><script>// Public client configuration. This key grants only the access allowed by database policies.
 const SUPABASE_CONFIG = Object.freeze({
   url: 'https://tcntbgpofttsskukopin.supabase.co',
@@ -1071,7 +1073,17 @@ function botOutcome(){
  const result=roomV2.reviewResult,wait=Math.max(0,Math.ceil(((roomV2.reviewRetryAt||0)-Date.now())/1000));
  const name=id=>id==='bot'?'Practice bot':roomV2.members.find(m=>m.user_id===id)?.alias||'Debater';
  const status=roomV2.reviewBusy?'Preparing winner, grades and rubric breakdown…':roomV2.reviewError?'Assessment unavailable: '+roomV2.reviewError:result?(result.provisional?'Provisional assessment':result.winners?.length>1?'Draw':'Winner: '+(result.winners||[]).map(name).join(', ')):'Practice finished. Request the winner and rubric breakdown.';
- box.innerHTML=(result&&!roomV2.reviewBusy&&!roomV2.reviewError?'':'<p role="status">'+esc(status)+'</p>')+(result?'<button onclick="document.getElementById(\'ai-result\').scrollIntoView({block:\'center\',behavior:\'smooth\'})">View grades & breakdown ↓</button>':'<button onclick="v2Review()" '+(roomV2.reviewBusy||wait?'disabled':'')+'>'+(roomV2.reviewBusy?'Assessing…':wait?'Retry in '+wait+'s':roomV2.reviewError?'Retry assessment':'Get assessment')+'</button>');
+ const markup=(result&&!roomV2.reviewBusy&&!roomV2.reviewError?'':'<p role="status">'+esc(status)+'</p>')+(result?'<button onclick="showGradesBreakdown()">View grades & breakdown ↓</button>':'<button onclick="v2Review()" '+(roomV2.reviewBusy||wait?'disabled':'')+'>'+(roomV2.reviewBusy?'Assessing…':wait?'Retry in '+wait+'s':roomV2.reviewError?'Retry assessment':'Get assessment')+'</button>');
+ if(box.dataset.markup!==markup){box.innerHTML=markup;box.dataset.markup=markup;}
+}
+
+
+function showGradesBreakdown(){
+ const target=$('#ai-result');if(!target)return;
+ if(roomV2.reviewResult&&!target.textContent.trim())renderDebateReview(roomV2.reviewResult);
+ roomV2.chatOpen=false;v2SyncChat();
+ target.setAttribute('tabindex','-1');target.focus({preventScroll:true});
+ target.scrollIntoView({block:'start',behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
 }
 
 
