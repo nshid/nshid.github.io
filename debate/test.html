@@ -214,6 +214,13 @@ dialog.dialog-wide { width: min(840px, calc(100vw - 48px)); }
 button.device-controls{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:56px}
 
 #mic-btn.mic-locked{display:inline-grid;place-items:center;flex:0 0 44px;width:44px;min-width:44px;min-height:44px;padding:7px;line-height:1}.mic-lock-icon{display:block}
+/* Speaking cues use paint effects only: camera tiles retain their exact geometry. */
+.seat.speaking{border:1px solid var(--accent)}
+.seat.speaking::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;box-shadow:inset 0 0 18px #d4f87945;animation:speaker-glow 1.6s ease-in-out infinite}
+.seat.speaking .identity .avatar{animation:speaker-ripple 1.6s ease-out infinite}
+@keyframes speaker-ripple{0%{box-shadow:0 0 0 0 #d4f87965,0 0 0 0 #d4f87930}70%{box-shadow:0 0 0 12px #d4f87900,0 0 0 22px #d4f87900}100%{box-shadow:0 0 0 12px #d4f87900,0 0 0 22px #d4f87900}}
+@keyframes speaker-glow{50%{opacity:.4}}
+@media(prefers-reduced-motion:reduce){.seat.speaking::after,.seat.speaking .identity .avatar{animation:none}.seat.speaking .identity .avatar{box-shadow:0 0 0 3px #d4f87965}}
 
 .test-table-wrap{overflow:auto;margin-top:16px;border:1px solid var(--line);border-radius:8px}
 .test-table{table-layout:fixed;width:100%;border-collapse:collapse;font-size:12px;min-width:800px}

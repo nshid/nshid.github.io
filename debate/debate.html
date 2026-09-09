@@ -214,6 +214,13 @@ dialog.dialog-wide { width: min(840px, calc(100vw - 48px)); }
 button.device-controls{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:56px}
 
 #mic-btn.mic-locked{display:inline-grid;place-items:center;flex:0 0 44px;width:44px;min-width:44px;min-height:44px;padding:7px;line-height:1}.mic-lock-icon{display:block}
+/* Speaking cues use paint effects only: camera tiles retain their exact geometry. */
+.seat.speaking{border:1px solid var(--accent)}
+.seat.speaking::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;box-shadow:inset 0 0 18px #d4f87945;animation:speaker-glow 1.6s ease-in-out infinite}
+.seat.speaking .identity .avatar{animation:speaker-ripple 1.6s ease-out infinite}
+@keyframes speaker-ripple{0%{box-shadow:0 0 0 0 #d4f87965,0 0 0 0 #d4f87930}70%{box-shadow:0 0 0 12px #d4f87900,0 0 0 22px #d4f87900}100%{box-shadow:0 0 0 12px #d4f87900,0 0 0 22px #d4f87900}}
+@keyframes speaker-glow{50%{opacity:.4}}
+@media(prefers-reduced-motion:reduce){.seat.speaking::after,.seat.speaking .identity .avatar{animation:none}.seat.speaking .identity .avatar{box-shadow:0 0 0 3px #d4f87965}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script></head><body><header class="topbar"></header><main class="shell" id="app"></main><script>// Public client configuration. This key grants only the access allowed by database policies.
 const SUPABASE_CONFIG = Object.freeze({
   url: 'https://tcntbgpofttsskukopin.supabase.co',
@@ -274,6 +281,62 @@ function sendChat(e){e.preventDefault();if(!requireUser())return;let input=e.tar
 function download(blob,name){let url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000)}
 function exportData(){download(new Blob([JSON.stringify({version:1,debates:read().debates},null,2)],{type:'application/json'}),'openfloor-debates.json')}
 const isRoom=location.pathname.endsWith('debate.html');
+
+// Local writing prompts, not factual claims or AI calls.
+const debateTopicGroups=[
+ ['Technology','Consider user control, accountability and how benefits and risks are distributed.','Rights and access|Implementation and oversight|Long-term incentives',[
+  'Should AI-generated content always be labeled?', 'Should social platforms offer chronological feeds by default?',
+  'Should people own the data collected about them?', 'Should schools teach students how to challenge AI answers?',
+  'Should public agencies use only open-source software?', 'Should users have a legal right to repair their devices?',
+  'Should recommendation algorithms be independently audited?', 'Should children’s apps be free of targeted advertising?']],
+ ['Work and economics','Compare livelihoods, productivity and bargaining power. Distinguish short-term adjustments from lasting effects.','Workers and employers|Costs and productivity|Fairness and alternatives',[
+  'Should the standard workweek be four days?', 'Should job advertisements always disclose salary ranges?',
+  'Should employees have a right to disconnect after work?', 'Should companies share profits with their employees?',
+  'Should unpaid internships be prohibited?', 'Should hiring prioritize demonstrated skills over degrees?',
+  'Should large companies give workers seats on their boards?', 'Should remote work be the default for suitable jobs?']],
+ ['Education','Define the age group and educational setting. Consider learning, opportunity, teacher workload and how progress would be measured.','Learning outcomes|Access and resources|Assessment and tradeoffs',[
+  'Should schools replace most homework with independent reading?', 'Should students help design their school curriculum?',
+  'Should universities replace timed exams with projects?', 'Should financial literacy be a required school subject?',
+  'Should schools start later in the morning?', 'Should every student learn a musical instrument?',
+  'Should community service be required for graduation?', 'Should university lectures be freely available online?']],
+ ['Environment','Specify the location, time horizon and realistic alternatives. Compare environmental outcomes with affordability and practical delivery.','Environmental goals|Who pays and benefits|Feasibility and safeguards',[
+  'Should cities make public transportation free?', 'Should governments prioritize repairing products over recycling them?',
+  'Should new public buildings be required to generate renewable energy?', 'Should urban centers restrict private cars?',
+  'Should food packaging use standardized reusable containers?', 'Should cities replace decorative lawns with native plants?',
+  'Should nuclear power be part of a low-carbon energy strategy?', 'Should frequent flyers pay higher environmental charges?']],
+ ['Community','Identify who makes the decision and whose needs might conflict. Compare shared benefits with individual choice and available resources.','Public value|Individual choice|Funding and participation',[
+  'Should libraries lend tools and household equipment?', 'Should residents directly decide part of their city’s budget?',
+  'Should vacant shops become temporary community spaces?', 'Should cities prioritize pedestrian space over parking?',
+  'Should public parks host more community gardens?', 'Should local museums offer free admission?',
+  'Should neighborhoods have a quiet hour every evening?', 'Should public services be available without smartphone apps?']],
+ ['Science and exploration','Separate established evidence, uncertainty and speculation. Specify the mission and compare it with other uses of scarce resources.','Purpose and evidence|Funding and responsibility|Risks and alternatives',[
+  'Should public agencies lead space exploration?', 'Should ocean exploration receive more funding than crewed spaceflight?',
+  'Should publicly funded research be freely accessible?', 'Should scientists prioritize replication over novel findings?',
+  'Should governments fund a permanent research base on the Moon?', 'Should citizen science be part of school science courses?',
+  'Should research grants be partly allocated by lottery among qualified proposals?', 'Should science museums emphasize unresolved questions over established discoveries?']],
+ ['Culture and media','Define the creative work or institution involved. Weigh creative freedom, public access, attribution and sustainable support.','Creative freedom|Access and ownership|Cultural impact',[
+  'Should public funding support local journalism?', 'Should museums return objects acquired through colonial coercion?',
+  'Should streaming platforms disclose how they pay artists?', 'Should cities fund public art before major sporting events?',
+  'Should book awards judge works without knowing the author’s identity?', 'Should adaptations prioritize faithfulness to the original story?',
+  'Should historical films clearly label invented scenes?', 'Should cultural institutions reserve space for emerging local artists?']],
+ ['Everyday ethics','Make the principle clear and test it against concrete examples. Explain exceptions, competing duties and the limits of the proposed rule.','Principles and values|Difficult cases|Consistency and consequences',[
+  'Should honesty take priority over protecting someone’s feelings?', 'Should people prioritize local charities over international charities?',
+  'Should competitive games reward cooperation as much as individual performance?', 'Should parents pay children for household chores?',
+  'Should schools teach debate as a required life skill?', 'Should public recognition matter when judging an act of generosity?',
+  'Should people have a responsibility to challenge misinformation shared by friends?', 'Should apologies always include a concrete offer to repair harm?']]
+];
+const debateTopicLibrary=debateTopicGroups.flatMap(([group,scope,angles,titles])=>titles.map(title=>({title,group,scope,angles:angles.split('|')})));
+function nextDebateTopic(){
+ const stored=get('openfloor.topic-history',[]),history=Array.isArray(stored)?stored.filter(t=>debateTopicLibrary.some(d=>d.title===t)):[];
+ let pool=debateTopicLibrary.filter(d=>!history.includes(d.title));
+ if(!pool.length)pool=debateTopicLibrary.filter(d=>d.title!==history.at(-1));
+ const selected=pool[Math.floor(Math.random()*pool.length)];
+ put('openfloor.topic-history',[...(!debateTopicLibrary.some(d=>!history.includes(d.title))?[]:history),selected.title]);return selected;
+}
+function debateTopicDraft(title){
+ const topic=debateTopicLibrary.find(d=>d.title===title)||{scope:'Define the setting and key terms. Compare practical alternatives and the people affected.',angles:['Principles and evidence','Practical consequences','Alternatives and safeguards']};
+ return {context:`Motion: “${title}” PRO argues for the proposed change or principle; CON argues against it and may defend the status quo or a clear alternative. For an either/or question, PRO defends the first alternative and CON the second unless both debaters explicitly agree otherwise.\n\n${topic.scope} Agree on the scope before starting. Each side should explain a concrete example, identify assumptions, and distinguish evidence from predictions.\n\nTest the strongest opposing argument rather than a weaker version of it. Identify what evidence would change your conclusion and acknowledge uncertainty. This is a local discussion prompt; no factual claims have been independently verified.`,subs:topic.angles.map(angle=>({title:angle,context:`Apply ${angle.toLowerCase()} to the motion: “${title}” Compare the strongest case on each side and explain a meaningful tradeoff.`}))};
+}
 
 /* Account presentation and admin controls. Server functions remain authoritative. */
 let accountRoles={admin:false,superadmin:false,admins:[]};
@@ -492,7 +555,14 @@ function wireDebateFields(el){
  privacy?.addEventListener('change',update);mode?.addEventListener('change',update);update();
 }
 
-function magicDraft(part){let title=$('#draft-title').value.trim();if(!title){title=seedTitles[Math.floor(Math.random()*seedTitles.length)];$('#draft-title').value=title}if(part!=='subs')$('#draft-context').value=`The motion is: “${title}” The affirmative should explain why the proposal is desirable and workable. The opposition should examine its assumptions and offer a defensible alternative.\n\nDefine the key terms, identify affected communities, and separate measurable outcomes from value judgments. Compare the proposal with the status quo, considering both immediate effects and longer-term consequences.\n\nEach side should cite evidence, acknowledge uncertainty, and respond directly to the strongest opposing argument. Agree on the scope before starting; no factual claims in this generated template have been verified.`;if(part!=='context')setDraftSubtopics([{title:'Principles and evidence',context:'Which values and evidence should guide this decision? Explain how you would weigh conflicting priorities.'},{title:'Practical consequences',context:'Who benefits and who bears the costs? Consider intended outcomes and unintended consequences.'},{title:'Alternatives and safeguards',context:'What alternatives or safeguards would improve the outcome? Explain how success could be evaluated.'}]);toast('Local draft generated — review together before starting.')}
+function magicDraft(part){
+ const input=$('#draft-title');let title=input.value.trim();
+ if(!title||part==='all'&&input.dataset.generatedTitle===title){title=nextDebateTopic().title;input.value=title;input.dataset.generatedTitle=title}
+ const draft=debateTopicDraft(title);
+ if(part!=='subs')$('#draft-context').value=draft.context;
+ if(part!=='context')setDraftSubtopics(draft.subs);
+ toast('Local draft generated — review together before starting.');
+}
 function parseDraft(f){
  if(f.get('mode')==='bot')return {title:f.get('title').trim(),context:f.get('context').trim(),subs:[],intro:0,framing:0,closing:0,first:'a',botDifficulty:f.get('botDifficulty')||'Beginner',botMinutes:Number(f.get('botMinutes')||1)};
  const titles=f.getAll('subtopicTitle'),contexts=f.getAll('subtopicContext'),limit=subtopicLimit(f.get('mode'));
@@ -605,12 +675,12 @@ function v2Tiles(){
   tile.innerHTML=`<div class="tile-top"><span>${esc(p.role)}${p.user_id===room.host?' · creator':''}</span><span class="tile-status"><span class="tile-timer"></span><span class="tile-listening">Listening</span></span></div><div class="identity">${p.anonymous?'<span class="avatar anonymous-avatar" aria-label="Anonymous spectator">◌</span>':avatar(p)}<p>${displayAlias(p)}</p></div><video autoplay muted playsinline></video><span class="nameplate">${displayAlias(p)}${id===identity()?' · You':''}</span>${v2MicBadge()}`;
   stage.append(tile);
  }}
- for(const tile of stage.children){const id=tile.dataset.user,video=tile.querySelector('video');if(!id||!video)continue;const stream=roomV2.streams.get(id);if(video.srcObject!==stream)video.srcObject=stream||null;tile.classList.toggle('speaking',!!roomV2.activity[id]?.speaking);video.classList.toggle('hidden',!roomV2.members.find(m=>m.user_id===id)?.camera_on||!stream)}
- v2UpdateMicBadges();v2UpdateListening();
+ for(const tile of stage.children){const id=tile.dataset.user,video=tile.querySelector('video');if(!id||!video)continue;const stream=roomV2.streams.get(id);if(video.srcObject!==stream)video.srcObject=stream||null;video.classList.toggle('hidden',!roomV2.members.find(m=>m.user_id===id)?.camera_on||!stream)}
+ v2UpdateMicBadges();v2UpdateListening();v2UpdateSpeaking();
 }
 function v2Tick(){if(!roomJoined||!$('#round-time'))return;const now=roomNow(),s=roomV2.session,r=v2Round(),m=currentMember();$('#round-time').textContent=r?minutes(Math.ceil((r.endsAt-now)/1000)):s.phase==='ended'?'00:00':s.startedAt>now?minutes(Math.ceil((s.startedAt-now)/1000)):'--:--';for(let tile of $('#camera-stage').children){const person=roomV2.members.find(m=>m.user_id===tile.dataset.user);if(!person)continue;tile.querySelector('.tile-timer').textContent=RoomRules.maySpeak(person,room,s,now)&&r?minutes(Math.ceil((r.endsAt-now)/1000)):''}
  if(role!=='viewer'&&!botPractice()){const budget={interruptMs:120000,definitions:3,source:1,...s.budgets?.[identity()]};const remaining=budget.interruptMs+(s.interrupt?.user_id===identity()?Math.max(0,s.interrupt.endsAt-now):0);$('#v2-interrupt-time').textContent=minutes(remaining/1000);$('#v2-interrupt').disabled=!roomV2.hold&&!RoomRules.canInterrupt(m,room,s,now);$('#v2-definition-count').textContent=budget.definitions;$('#v2-source-count').textContent=budget.source;$('#v2-definition').disabled=s.phase!=='active'||!budget.definitions;$('#v2-source').disabled=s.phase!=='active'||!budget.source}
- const finish=$('#finish-turn');if(finish){finish.classList.toggle('hidden',s.phase!=='active'||role==='viewer'||r?.speaker!==identity());finish.disabled=!!roomV2.finishingTurn||!r||now-r.startsAt<1000} v2ApplyMic();if((s.phase==='ended'||s.endsAt&&now>=s.endsAt)&&roomV2.videoRecorder?.state==='recording')v2ToggleVideo();if(!botPractice()&&s.phase==='active'&&now>=s.startedAt&&now<s.endsAt&&role!=='viewer'&&roomV2.outgoing&&!roomV2.recording&&!roomV2.stopCapture)v2StartCapture();if((s.phase==='ended'||s.endsAt&&now>=s.endsAt)&&roomV2.recording)v2StopCapture();botTick();}
+ const finish=$('#finish-turn');if(finish){finish.classList.toggle('hidden',s.phase!=='active'||role==='viewer'||r?.speaker!==identity());finish.disabled=!!roomV2.finishingTurn||!r||now-r.startsAt<1000} v2ApplyMic();if((s.phase==='ended'||s.endsAt&&now>=s.endsAt)&&roomV2.videoRecorder?.state==='recording')v2ToggleVideo();if(!botPractice()&&s.phase==='active'&&now>=s.startedAt&&now<s.endsAt&&role!=='viewer'&&roomV2.outgoing&&!roomV2.recording&&!roomV2.stopCapture)v2StartCapture();if((s.phase==='ended'||s.endsAt&&now>=s.endsAt)&&roomV2.recording)v2StopCapture();botTick();v2UpdateSpeaking();}
 function v2ApplyMic(){
  const locked=!RoomRules.maySpeak(currentMember(),room,roomV2.session,roomNow()),allowed=mediaAccess().microphone&&roomJoined&&!locked&&!manualMute;
  roomV2.outgoing?.getAudioTracks().forEach(t=>t.enabled=allowed);
@@ -676,8 +746,17 @@ function v2Segment(){if(!roomV2.recording||!roomV2.outgoing)return;const types=[
 function v2StopCapture(){clearInterval(roomV2.recBlink);roomV2.recording=false;roomV2.stopCapture=true;clearTimeout(roomV2.segmentTimer);if(roomV2.capture?.state==='recording'){roomV2.currentClip.end_ms=Math.max(roomV2.currentClip.start_ms,roomNow()-roomV2.session.startedAt);roomV2.capture.stop()}v2CaptureStatus()}
 async function v2Upload(clip){clip.status='uploading';v2RenderClips();const extension=clip.blob.type.includes('mp4')?'m4a':clip.blob.type.includes('ogg')?'ogg':'webm';clip.path=identity()+'/'+roomId+'/'+clip.id+'.'+extension;const task=(async()=>{try{await cloudResult(cloudClient.storage.from('debate-audio').upload(clip.path,clip.blob,{contentType:clip.blob.type.split(';')[0],upsert:false}));await cloudResult(cloudClient.from('audio_segments').insert({id:clip.id,debate_id:roomId,user_id:clip.user_id,path:clip.path,start_ms:clip.start_ms,end_ms:clip.end_ms,uncertainty_ms:clip.uncertainty_ms}));clip.status='saved privately';const {error}=await cloudClient.functions.invoke('debate-ai',{body:{action:'transcribe',segmentId:clip.id}});clip.status=error?'saved · transcription unavailable':'saved · transcribed'}catch(e){clip.status='upload failed · download locally';clip.error=cloudError(e)}finally{v2RenderClips()}})();roomV2.uploadJobs.add(task);task.finally(()=>roomV2.uploadJobs.delete(task))}
 function v2RenderClips(){if(!$('#audio-clips'))return;$('#audio-clips').innerHTML=roomV2.clips.map((c,i)=>`<div class="audio-clip"><a href="${c.url}" download="${esc(c.alias)}-${i+1}.${c.blob.type.includes('mp4')?'m4a':'webm'}">↓ Segment ${i+1} · ${minutes((c.end_ms-c.start_ms)/1000)}</a><small>${esc(c.status)}</small></div>`).join('')}
-function v2DownloadManifest(){download(new Blob([JSON.stringify({version:2,debateId:roomId,speakerId:identity(),serverStartedAt:roomV2.session.startedAt,rounds:roomV2.session.rounds,clock:'server-aligned estimate, not sample-exact synchronization',segments:roomV2.clips.map(({blob,url,...c})=>c)},null,2)],{type:'application/json'}),'debate-timeline-'+roomId+'.json')}
-async function v2Review(){const b=$('#review-btn');b.disabled=true;try{const {data,error}=await cloudClient.functions.invoke('debate-ai',{body:{action:'judge',debateId:roomId}});if(error||data?.error)throw Error(data?.error||'AI review unavailable. Check provider settings and transcription.');renderDebateReview(data.result)}catch(e){$('#ai-result').textContent=e.message}finally{b.disabled=false}}
+function v2DownloadManifest(){download(new Blob([JSON.stringify({version:2,debateId:roomId,speakerId:identity(),serverStartedAt:roomV2.session.startedAt,positions:roomV2.session.positions,botReplies:roomV2.session.botReplies,assessment:roomV2.reviewResult,rounds:roomV2.session.rounds,clock:'server-aligned estimate, not sample-exact synchronization',segments:roomV2.clips.map(({blob,url,...c})=>c)},null,2)],{type:'application/json'}),'debate-timeline-'+roomId+'.json')}
+async function v2Review(){
+ if(roomV2.reviewBusy||Date.now()<(roomV2.reviewRetryAt||0))return;
+ const b=$('#review-btn');b.disabled=true;roomV2.reviewBusy=true;roomV2.reviewError='';const owner=roomId;botOutcome();
+ try{const {data,error}=await cloudClient.functions.invoke('debate-ai',{body:{action:'judge',debateId:roomId}});
+  if(error||data?.error){let detail=data;try{if(!detail?.error)detail=await error.context.json()}catch{}roomV2.reviewRetryAt=Date.now()+Math.max(30,Number(detail?.retryAfterSeconds)||30)*1000;throw Error(detail?.error||'AI review unavailable. Check provider settings and transcription.')}
+  if(!roomJoined||roomId!==owner)return;
+  renderDebateReview(data.result);roomV2.reviewResult=data.result;roomV2.reviewRetryAt=0;
+ }catch(e){if(roomId===owner){roomV2.reviewError=e.message;$('#ai-result').textContent=e.message}}
+ finally{roomV2.reviewBusy=false;b.disabled=false;botOutcome()}
+}
 function v2Cleanup(){if(!roomJoined)return;botCleanup();if(roomV2.videoRecorder?.state==='recording')v2ToggleVideo();v2Release();if(roomV2.recording)v2StopCapture();clearInterval(roomV2.poll);clearInterval(roomV2.tick);clearInterval(roomV2.vad);const release=Promise.resolve().then(()=>cloudClient?.rpc('leave_room',{p_tab:tabId})).catch(()=>{});roomV2.peer?.destroy();roomV2.raw?.getTracks().forEach(t=>t.stop());roomV2.outgoing?.getTracks().forEach(t=>t.stop());roomV2.audioContext?.close();put('openfloor.presence',get('openfloor.presence',[]).filter(x=>x.tab!==tabId));roomJoined=false;roomV2.peer=null;roomV2.raw=null;roomV2.outgoing=null;localStream=null;roomV2.audioContext=null;roomV2.connections.clear();roomV2.calls.clear();roomV2.streams.clear();roomV2.analysers.clear();roomV2.micStates={};roomV2.listeningStates={};roomV2.slots=[];roomV2.visible=[];roomV2.roomMuted=false;roomV2.signature='';roomV2.lastMicState=undefined;return release}
 async function v2Leave(){if(roomV2.videoRecorder?.state==='recording'){v2ToggleVideo();return toast('Camera recording stopped. Download it before leaving.')}if(roomV2.recording){v2StopCapture();return toast('Capture stopped. Save your audio, then leave again.')}if(roomV2.clips.length||roomV2.uploadJobs.size||roomV2.videoUrl){modal('Keep your debate audio',`<p>${roomV2.uploadJobs.size?'Uploads are still running. Wait for them before leaving.':'Download any unsaved segments and the timing manifest before leaving.'}</p><button type="button" onclick="v2DownloadManifest()">Download manifest</button>`,async(f,el)=>{await Promise.allSettled([...roomV2.uploadJobs]);await v2ExitToDashboard()},'Finish uploads & leave');return}await v2ExitToDashboard()}
 function installRoomV2(){if(!CLOUD_ENABLED)return;window.removeEventListener('pagehide',originalCleanup);showEntry=v2Entry;joinRoom=v2Join;enableMedia=v2EnableMedia;toggleMic=v2ToggleMic;toggleCamera=v2ToggleCamera;proposeEdit=v2Propose;cleanup=v2Cleanup;leaveRoom=v2Leave;updateRoom=()=>{};if(isRoom){window.addEventListener('keydown',e=>{if(e.code==='Space'&&!e.repeat&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target.tagName)&&!$('#modal')?.open){e.preventDefault();v2Hold()}});window.addEventListener('keyup',e=>{if(e.code==='Space')v2Release()});window.addEventListener('blur',v2Release);window.addEventListener('beforeunload',e=>{if(!roomV2.leaving&&(roomV2.recording||roomV2.clips.length||roomV2.videoRecorder?.state==='recording'||roomV2.videoUrl)){e.preventDefault();e.returnValue=''}});window.addEventListener('pagehide',v2Cleanup)}}
@@ -697,11 +776,19 @@ async function v2FinishTurn(){
  try{const result=await cloudResult(cloudClient.rpc('finish_turn_early',{p_id:roomId,p_tab:tabId,p_starts_at:r.startsAt}));v2Snapshot(result,sent)}catch(e){toast(cloudError(e))}finally{roomV2.finishingTurn=false;v2Tick()}
 }
 
+function v2UpdateSpeaking(){
+ for(const tile of $('#camera-stage')?.children||[]){
+  const member=roomV2.members.find(m=>m.user_id===tile.dataset.user);if(!member)continue;
+  const speaking=member.is_bot?!!(botState.speaking&&botState.voice&&!roomV2.roomMuted&&v2Round()?.speaker==='bot'):!!roomV2.activity[member.user_id]?.speaking&&!v2MicState(member);
+  tile.classList.toggle('speaking',speaking);tile.setAttribute('aria-label',member.alias+(speaking?' · speaking':''));
+ }
+}
+
 function roomRoleFields(selected=''){
  const fmt=RoomRules.modeOf(room),host=room.host===identity();
  const choices=fmt==='bot'?(host?[['a','Practice debater · creator']]:[]):fmt==='duel'?(host||!room.host?[['a','Debater A · creator']]:[['b','Debater B · opponent']]):fmt==='teams'?[['pro','PRO team'],['con','CON team']]:[['open','Open-floor participant']];
  if(room.spectators)choices.push(['viewer','Spectator']);
- return '<label>Join as<select name="role" onchange="updatePositionField(this)">'+choices.map(([value,label])=>'<option value="'+value+'" '+(value===selected?'selected':'')+'>'+label+'</option>').join('')+'</select></label>'+(['duel','bot'].includes(fmt)?'<label data-position-field>Position<select name="position">'+['pro','con'].map(side=>'<option value="'+side+'" '+(roomV2.positionInfo?.mine===side?'selected ':'')+(fmt==='duel'&&roomV2.positionInfo?.taken?.includes(side)&&roomV2.positionInfo?.mine!==side?'disabled':'')+'>'+side.toUpperCase()+(fmt==='duel'&&roomV2.positionInfo?.taken?.includes(side)&&roomV2.positionInfo?.mine!==side?' · claimed':'')+'</option>').join('')+'</select><small>'+(fmt==='bot'?'The bot takes the opposite position. You can change sides before starting.':'First come, first served. Once both sides are claimed, swapping needs your opponent’s approval.')+'</small></label>':'')+(fmt==='bot'?'<p class="field-help">Only the creator can debate this bot. Spectating does not release the practice seat to someone else. Return to the debater role before starting.</p>':'');
+ return '<label>Join as<select name="role" onchange="updatePositionField(this)">'+choices.map(([value,label])=>'<option value="'+value+'" '+(value===selected?'selected':'')+'>'+label+'</option>').join('')+'</select></label>'+(['duel','bot'].includes(fmt)?'<label data-position-field>Position<select name="position">'+['pro','con'].map(side=>'<option value="'+side+'" '+(roomV2.positionInfo?.mine===side?'selected ':'')+(fmt==='duel'&&roomV2.positionInfo?.taken?.includes(side)&&roomV2.positionInfo?.mine!==side?'disabled':'')+'>'+side.toUpperCase()+(fmt==='duel'&&roomV2.positionInfo?.taken?.includes(side)&&roomV2.positionInfo?.mine!==side?' · claimed':'')+'</option>').join('')+'</select><small>'+(fmt==='bot'?'The bot takes the opposite position. For A or B topics, PRO supports A and CON supports B, unless the context defines otherwise. You can change sides before starting.':'First come, first served. Once both sides are claimed, swapping needs your opponent’s approval.')+'</small></label>':'')+(fmt==='bot'?'<p class="field-help">Only the creator can debate this bot. Spectating does not release the practice seat to someone else. Return to the debater role before starting.</p>':'');
 }
 function updatePositionField(select){const label=select.form?.querySelector('[data-position-field]');if(!label)return;label.hidden=select.value==='viewer';label.querySelector('select').disabled=label.hidden;const input=label.querySelector('select');if(!input.value||input.selectedOptions[0]?.disabled)input.value=[...input.options].find(o=>!o.disabled)?.value||''}
 function roomMemberRole(member){const position=roomV2.session.positions?.[member.user_id];return position&&['a','b','bot'].includes(member.role)?position.toUpperCase()+' · '+member.role.toUpperCase():member.role}
@@ -831,17 +918,17 @@ async function v2RevealIdentity(){
 }
 
 /* Bot practice: server-timed turns, private STT, and local browser speech. */
-const botState={requested:new Set(),busy:false,error:'',retryAt:0,voice:false,voiceChosen:false,spoken:new Set(),utterance:null,reviewed:false,recordedRound:0};
+const botState={requested:new Set(),busy:false,error:'',retryAt:0,voice:false,voiceChosen:false,spoken:new Set(),utterance:null,speaking:false,reviewed:false,recordedRound:0};
 const botPractice=()=>room?.mode==='bot';
 function botPanel(){return '<section class="pod bot-pod" id="bot-panel"><div class="row between"><h3>Bot practice · <span id="bot-level"></span></h3><span class="pill">Unranked</span></div><p id="bot-status" class="muted"></p><div class="row"><button id="bot-voice" aria-pressed="false" onclick="botEnableVoice()">Enable bot voice</button><button id="bot-retry" class="hidden" onclick="botRetry()">Retry bot reply</button></div><div id="bot-reply" class="bot-reply" aria-label="Bot reply transcript"></div><p class="field-help">Browser voice reads the bot’s reply. Your turns use the configured speech-to-text service. AI processing pauses the turn timer. Practice grades never change your profile grade.</p></section>'}
-function botMount(){if(!botPractice())return;$('#connection-status').insertAdjacentHTML('afterend',botPanel());$('#room-agreement').textContent='Review the topic and context, enable your microphone, then mark Ready. You speak first in each of three rounds.';botRender()}
+function botMount(){if(!botPractice())return;$('#topic-progress').insertAdjacentHTML('afterend','<div id="practice-outcome" class="hidden"></div>');$('#connection-status').insertAdjacentHTML('afterend',botPanel());$('#room-agreement').textContent='Review the topic and context, enable your microphone, then mark Ready. You speak first in each of three rounds.';botRender()}
 function botRender(){if(!botPractice()||!$('#bot-status'))return;$('#bot-level').textContent=room.botDifficulty||'Beginner';$('#bot-voice').textContent=botState.voice?'Disable bot voice':'Enable bot voice';$('#bot-voice').setAttribute('aria-pressed',String(botState.voice));const s=roomV2.session,last=s.rounds?.at(-1),r=v2Round();
  $('#bot-status').textContent=botState.error|| (s.phase==='lobby'?'3 rounds · '+(room.botMinutes||1)+' minute(s) per speaker.':s.phase==='ended'?'Practice complete. AI assessment is separate from your overall grade.':r?.speaker==='bot'?'The bot is speaking. Your microphone is locked.':r?'Your turn: make your case and respond to the bot.':last?.speaker==='bot'?'Your next turn is starting…':'Transcribing your turn and preparing the bot’s reply…');
  $('#bot-retry').classList.toggle('hidden',!botState.error||role==='viewer'||botState.busy);
  const wait=Math.max(0,Math.ceil((botState.retryAt-Date.now())/1000));$('#bot-retry').disabled=wait>0;$('#bot-retry').textContent=wait?'Retry in '+wait+'s':'Retry bot reply';
  const replies=s.botReplies||[],reply=replies.find(x=>x.roundNumber===r?.roundNumber)||replies.at(-1);$('#bot-reply').textContent=reply?.text||'The bot’s reply will appear here.';
  if(s.phase==='active'&&!r){$('#phase-caption').textContent='Practice pause';$('#round-label').textContent='Preparing the next turn';}
- if($('#start-btn'))$('#start-btn').textContent='Start practice';
+ botOutcome();if($('#start-btn'))$('#start-btn').textContent='Start practice';
  if($('#ready-btn'))$('#ready-btn').disabled=s.phase!=='lobby'||!currentMember()?.media_ready;
 }
 function botEnableVoice(){
@@ -857,10 +944,10 @@ function botSpeak(){
  botState.spoken.add(r.roundNumber);
  // A late arrival reads the visible transcript instead of restarting old audio.
  if(roomNow()-r.startsAt>5000)return;
- const u=new SpeechSynthesisUtterance(reply.text);u.rate=1;u.onend=()=>{botState.utterance=null};u.onerror=()=>{botState.utterance=null;toast('Voice playback unavailable. The bot reply is visible as text.')};botState.utterance=u;speechSynthesis.speak(u);
+ const u=new SpeechSynthesisUtterance(reply.text);u.rate=1;u.onstart=()=>{if(botState.utterance===u){botState.speaking=true;v2UpdateSpeaking()}};u.onend=()=>{if(botState.utterance===u){botState.utterance=null;botState.speaking=false;v2UpdateSpeaking()}};u.onerror=()=>{if(botState.utterance===u){botState.utterance=null;botState.speaking=false;v2UpdateSpeaking();toast('Voice playback unavailable. The bot reply is visible as text.')}};botState.utterance=u;speechSynthesis.speak(u);
 }
-function botMuteVoice(){if(botState.utterance){if(roomV2.roomMuted)speechSynthesis.pause();else speechSynthesis.resume()}}
-function botStopVoice(){if(botState.voice&&typeof speechSynthesis!=='undefined')speechSynthesis.cancel();botState.utterance=null}
+function botMuteVoice(){if(botState.utterance){if(roomV2.roomMuted)speechSynthesis.pause();else speechSynthesis.resume()}v2UpdateSpeaking()}
+function botStopVoice(){if(botState.voice&&typeof speechSynthesis!=='undefined')speechSynthesis.cancel();botState.utterance=null;botState.speaking=false;v2UpdateSpeaking()}
 function botTick(){
  if(!botPractice()||!roomJoined)return;const s=roomV2.session,r=v2Round(),last=s.rounds?.at(-1);
  if(botState.utterance&&(!r||r.speaker!=='bot'))botStopVoice();botSpeak();
@@ -893,9 +980,19 @@ function botEdit(){
  if(role==='viewer'||roomV2.session.phase!=='lobby')return;
  modal('Edit bot practice',draftTopicFields(room)+'<input type="hidden" name="mode" value="bot"><div class="grid2"><label>Difficulty<select name="botDifficulty">'+['Beginner','Watcher','Regular','Experienced','Professional'].map(x=>'<option '+(room.botDifficulty===x?'selected':'')+'>'+x+'</option>').join('')+'</select></label><label>Minutes per speaker<select name="botMinutes"><option value="1" '+(room.botMinutes===1?'selected':'')+'>1 minute</option><option value="2" '+(room.botMinutes===2?'selected':'')+'>2 minutes</option></select></label></div>',async(f,el)=>{await v2Action('practice_edit',{draft:{...parseDraft(f),mode:'bot'}});el.close();await v2Poll()},'Save practice',{wide:true});
 }
-function botCleanup(){botStopVoice();botState.requested.clear();botState.spoken.clear();botState.error='';botState.retryAt=0;botState.reviewed=false;botState.recordedRound=0}
+function botCleanup(){botStopVoice();botState.requested.clear();botState.spoken.clear();botState.error='';botState.retryAt=0;botState.reviewed=false;botState.recordedRound=0;roomV2.reviewResult=null;roomV2.reviewError='';roomV2.reviewRetryAt=0}
 
 function botAvatar(){const level=room?.botDifficulty||'Beginner',colors={Beginner:'#8fd694',Watcher:'#71c9ef',Regular:'#d1a3ff',Experienced:'#ffbf69',Professional:'#ff829b'};return '<span class="avatar bot-avatar" style="--bot-color:'+colors[level]+'" title="'+esc(level)+' bot" aria-label="'+esc(level)+' bot">🤖</span>'}
+
+// The top-of-room result notice remains visible when the detailed rubric is below the fold.
+function botOutcome(){
+ const box=$('#practice-outcome');if(!box||!botPractice())return;
+ const ended=roomV2.session.phase==='ended';box.classList.toggle('hidden',!ended);if(!ended)return;
+ const result=roomV2.reviewResult,wait=Math.max(0,Math.ceil(((roomV2.reviewRetryAt||0)-Date.now())/1000));
+ const name=id=>id==='bot'?'Practice bot':roomV2.members.find(m=>m.user_id===id)?.alias||'Debater';
+ const status=roomV2.reviewBusy?'Preparing winner, grades and rubric breakdown…':roomV2.reviewError?'Assessment unavailable: '+roomV2.reviewError:result?(result.provisional?'Provisional assessment':result.winners?.length>1?'Draw':'Winner: '+(result.winners||[]).map(name).join(', ')):'Practice finished. Request the winner and rubric breakdown.';
+ box.innerHTML='<p role="status">'+esc(status)+'</p>'+(result?'<button onclick="document.getElementById(\'ai-result\').scrollIntoView({block:\'center\',behavior:\'smooth\'})">View grades & breakdown ↓</button>':'<button onclick="v2Review()" '+(roomV2.reviewBusy||wait?'disabled':'')+'>'+(roomV2.reviewBusy?'Assessing…':wait?'Retry in '+wait+'s':roomV2.reviewError?'Retry assessment':'Get assessment')+'</button>');
+}
 
 
 
