@@ -237,6 +237,8 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 
 
 
+.room-loading{position:relative;min-height:180px}.room-grid.room-loading{min-height:400px}.room-loading>*{filter:blur(3px);opacity:.35;pointer-events:none}.room-loading::after{content:'≋  Loading room…';position:absolute;top:40%;left:50%;transform:translateX(-50%);padding:12px 18px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--accent);font-size:13px;white-space:nowrap;animation:room-loading-wave 1.2s ease-in-out infinite}@keyframes room-loading-wave{50%{opacity:.55;transform:translateX(-50%) translateY(-3px)}}@media(prefers-reduced-motion:reduce){.room-loading::after{animation:none}}
+
 .test-table-wrap{overflow:auto;margin-top:16px;border:1px solid var(--line);border-radius:8px}
 .test-table{table-layout:fixed;width:100%;border-collapse:collapse;font-size:12px;min-width:800px}
 .test-table th,.test-table td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
