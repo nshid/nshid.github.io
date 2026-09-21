@@ -792,19 +792,21 @@ const topicMainContexts={
 async function aiDraft(part,title){
  if(!CLOUD_ENABLED||!cloudSession?.user)return toast('Sign in to generate a custom draft.');
  const input=$('#draft-title'),context=$('#draft-context'),form=input.closest('form'),mode=form?.querySelector('[name=mode]')?.value||'duel';
+ const status=form?.querySelector('.dialog-error');const report=(message,error=false)=>{if(status){status.textContent=message;status.classList.toggle('error',error);status.setAttribute('role',error?'alert':'status')}else toast(message)};
  if(form?.dataset.drafting==='true')return;
- if(part==='subs'&&!context.value.trim())return toast('Write or generate topic context first.');
+ if(part==='subs'&&!context.value.trim())return report('Write or generate topic context first.',true);
  const subvalues=()=>JSON.stringify([...form.querySelectorAll('[name=subtopicTitle],[name=subtopicContext]')].map(e=>e.value));
  const before={title:input.value,context:context.value,subs:subvalues()};
- const controls=[...form.querySelectorAll('button[onclick*="magicDraft"]')],states=controls.map(b=>b.disabled),labels=controls.map(b=>b.textContent);form.dataset.drafting='true';controls.forEach(b=>{b.disabled=true;b.textContent='Drafting…'});context.setAttribute('aria-busy','true');toast('Writing topic-specific background…');
+ const controls=[...form.querySelectorAll('button[onclick*="magicDraft"]')],states=controls.map(b=>b.disabled),labels=controls.map(b=>b.textContent);form.dataset.drafting='true';controls.forEach(b=>{b.disabled=true;b.textContent='Drafting…'});context.setAttribute('aria-busy','true');report('Writing topic-specific background…');
  try{const {data,error}=await cloudClient.functions.invoke('debate-ai',{body:{action:'draft',part,title,context:before.context,mode}});
  if(error||data?.error){let message=data?.error;try{message||=(await error.context.json()).error}catch{}throw Error(message||'Drafting unavailable. Please retry.');}
- if(!input.isConnected||input.value!==before.title||subvalues()!==before.subs||context.value!==before.context||form.querySelector('[name=mode]')?.value!==mode)throw Error('Your draft changed while generation was running. Your edits were kept; retry when ready.');
- if(!data?.draft||typeof data.draft.context!=='string'||!Array.isArray(data.draft.subs))throw Error('The AI returned an incomplete draft. Please retry.');
+ if(!input.isConnected||input.value!==before.title||subvalues()!==before.subs||context.value!==before.context||(form.querySelector('[name=mode]')?.value||'duel')!==mode)throw Error('Your draft changed while generation was running. Your edits were kept; retry when ready.');
+ if(!data?.draft||(part!=='subs'&&typeof data.draft.context!=='string')||!Array.isArray(data.draft.subs))throw Error('The AI returned an incomplete draft. Please retry.');
+ if(part!=='context'&&mode!=='bot'&&!data.draft.subs.length)throw Error('No subtopics were returned. Please retry.');
  if(part!=='subs')context.value=data.draft.context;
  if(part!=='context'&&mode!=='bot')setDraftSubtopics(data.draft.subs);
- toast('Draft ready. Review the background and verify any factual claims.');
- }catch(e){toast(e.message)}finally{form.dataset.drafting='false';controls.forEach((b,i)=>{b.disabled=states[i];b.textContent=labels[i]});context.removeAttribute('aria-busy')}
+ report('Draft ready. Review the background and verify any factual claims.');
+ }catch(e){report(e.message,true)}finally{form.dataset.drafting='false';controls.forEach((b,i)=>{b.disabled=states[i];b.textContent=labels[i]});context.removeAttribute('aria-busy')}
 }
 
 /* Account presentation and admin controls. Server functions remain authoritative. */
