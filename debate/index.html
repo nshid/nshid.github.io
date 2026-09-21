@@ -264,6 +264,11 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 
 .round-clock-actions{display:flex;flex-direction:column;align-items:flex-end;gap:10px}.round-clock-actions>button{max-width:100%;white-space:normal}
 
+/* Keep lobby and private conversation content opaque in both themes. */
+#lobby.chat{background:var(--panel)}
+
+#quick-start{margin-top:14px;gap:10px;flex-wrap:wrap}
+
 html[data-theme=light]{color-scheme:light;--bg:#f6f8f3;--panel:#fff;--line:#cdd5c8;--muted:#52624d;--accent:#486f13;--red:#b92e38}
 html[data-theme=light] body{color:#172019}html[data-theme=light] :is(.topbar,.roundbar,dialog,.dialog-header,.dialog-footer,.site-footer,.chat-head,.composer,.settings-section,.test-table th){background:#fff;color:#172019;border-color:var(--line)}
 html[data-theme=light] :is(button,input,select,textarea){background:#f3f6ed;color:#172019;border-color:var(--line)}html[data-theme=light] :is(button.primary,a.primary,.primary,.logo){background:#d4f879;color:#172019}html[data-theme=light] :is(.feature,.ad){background:linear-gradient(135deg,#edf4de,#fff)}
@@ -336,7 +341,7 @@ const isRoom=location.pathname.endsWith('debate.html');
 
 function accountNoticesMarkup(){const notices=typeof cloudNotices!=='undefined'?cloudNotices.filter(n=>n.user_id===me()?.id):[];return notices.length?'<section class="notice" aria-label="Account notices"><b>Account notices</b>'+notices.map(n=>'<p>'+esc(n.body)+(n.debate_id?' <a href="debate.html?id='+esc(n.debate_id)+'">Review & download ↗</a>':'')+'</p>').join('')+'</section>':''}
 
-// Local writing prompts, not factual claims or AI calls.
+// Curated discussion background and writing prompts; no live AI calls.
 const debateTopicGroups=[
  ['Technology','Consider user control, accountability and how benefits and risks are distributed.','Rights and access|Implementation and oversight|Long-term incentives',[
   'Should AI-generated content always be labeled?', 'Should social platforms offer chronological feeds by default?',
@@ -389,8 +394,400 @@ function nextDebateTopic(){
 }
 function debateTopicDraft(title){
  const topic=debateTopicLibrary.find(d=>d.title===title)||{scope:'Define the setting and key terms. Compare practical alternatives and the people affected.',angles:['Principles and evidence','Practical consequences','Alternatives and safeguards']};
- return {context:`Motion: “${title}” PRO argues for the proposed change or principle; CON argues against it and may defend the status quo or a clear alternative. For an either/or question, PRO defends the first alternative and CON the second unless both debaters explicitly agree otherwise.\n\n${topic.scope} Agree on the scope before starting. Each side should explain a concrete example, identify assumptions, and distinguish evidence from predictions.\n\nTest the strongest opposing argument rather than a weaker version of it. Identify what evidence would change your conclusion and acknowledge uncertainty. This is a local discussion prompt; no factual claims have been independently verified.`,subs:topic.angles.map(angle=>({title:angle,context:`Apply ${angle.toLowerCase()} to the motion: “${title}” Compare the strongest case on each side and explain a meaningful tradeoff.`}))};
+ return {context:Object.hasOwn(topicMainContexts,title)?topicMainContexts[title]:`Add background for “${title}”: describe the situation, the proposed change and why people disagree. This custom topic needs its own context.`,subs:topicSubcontext[title]?topic.angles.map((angle,i)=>({title:angle,context:topicSubcontext[title][i]})):[]};
 }
+
+// Each built-in motion has three individually written background paragraphs.
+const topicSubcontext=Object.fromEntries([
+ [
+  "An AI label tells audiences how content was produced, but not whether its claims are accurate.",
+  "Labels can apply to fully generated work, small edits, or mixed human and machine contributions; these cases need different boundaries.",
+  "Disclosure requirements affect creators, platforms and audiences differently when production tools become commonplace."
+ ],
+ [
+  "Chronological feeds organize posts by time rather than predicted interest, giving users a different way to follow people they choose.",
+  "A chronological option still needs decisions about spam, moderation and posts from accounts outside the user's network.",
+  "Platforms balance advertising and engagement incentives against user control over attention."
+ ],
+ [
+  "Personal data can reveal patterns about a person even when individual records seem unimportant.",
+  "Data ownership involves practical questions about consent, deletion, portability and information concerning several people at once.",
+  "Selling personal data could create income while also encouraging people with fewer resources to surrender more privacy."
+ ],
+ [
+  "Students can encounter fluent AI answers whose reasoning or sources are incomplete.",
+  "Teachers need time and suitable examples to demonstrate source checking without making access to paid AI tools a prerequisite.",
+  "Critical use of AI concerns independent judgment as well as the ability to operate a tool."
+ ],
+ [
+  "Public software supports services that residents may have little choice about using.",
+  "Open source permits inspection and modification, but agencies still need maintenance, security expertise and reliable support.",
+  "Procurement choices can create long-term dependence on a vendor or a small group of specialist maintainers."
+ ],
+ [
+  "Repair access concerns tools, spare parts, diagnostic information and the ability to keep a purchased device working.",
+  "Manufacturers cite safety, security and liability when limiting who can modify or repair their products.",
+  "Repairable products can support local repair businesses, while changing incentives around replacement sales and product design."
+ ],
+ [
+  "Recommendation systems influence which information reaches an audience, often without users seeing the ranking process.",
+  "Audits need meaningful access to system behavior while protecting private data and commercially sensitive information.",
+  "An audit can identify problems at one moment, but systems and user behavior can change afterward."
+ ],
+ [
+  "Children may not recognize the purpose of personalized advertising or understand how their activity informs it.",
+  "An advertising restriction must distinguish children's services from general services used by mixed-age audiences.",
+  "Removing targeted ads changes how apps are funded, including possible subscriptions or less personalized advertising."
+ ],
+ [
+  "A shorter workweek affects staffing, schedules and the division of paid and unpaid work.",
+  "Keeping weekly pay constant while reducing hours changes the relationship between output, labor costs and service coverage.",
+  "Office staff, shift workers and people paid by the hour may experience very different versions of a four-day week."
+ ],
+ [
+  "Salary information can shape whether an applicant spends time applying and how they negotiate an offer.",
+  "Published ranges can be narrow and informative or so broad that they reveal little about the likely salary.",
+  "Transparency can expose unequal pay while raising questions about experience, performance and existing employees' salaries."
+ ],
+ [
+  "After-hours messages can make the boundary between work and personal time uncertain.",
+  "Emergency services, international teams and flexible schedules complicate a single rule about contact outside work.",
+  "A right to disconnect needs to address both explicit requests and the pressure to remain visibly available."
+ ],
+ [
+  "Profit sharing connects part of employee compensation to the financial outcome of the business.",
+  "Profit can fluctuate for reasons unrelated to an individual worker's effort, and accounting choices affect what is distributed.",
+  "Employees may prefer predictable wages, while employers may see shared rewards as a way to support cooperation."
+ ],
+ [
+  "Unpaid placements require applicants to cover living costs without wages, which can limit who can participate.",
+  "Employers and educational institutions distinguish training opportunities from work that would otherwise require paid staff.",
+  "A ban could change the number and design of placements, including those offered by small organizations."
+ ],
+ [
+  "A degree is one signal of preparation; portfolios, work samples and experience provide different evidence.",
+  "Skills assessments require time and careful design to avoid unpaid work trials or inconsistent evaluation.",
+  "Removing degree requirements can widen access, while licensed professions may still need formal credentials."
+ ],
+ [
+  "Board representation gives employees a role in decisions that can affect jobs, investment and workplace conditions.",
+  "Worker representatives must navigate confidential information and duties to the company alongside their responsibilities to employees.",
+  "Employee influence may favor long-term stability, but workers and shareholders can disagree about how risk should be shared."
+ ],
+ [
+  "Remote work changes access to jobs for people constrained by location, commuting or caring responsibilities.",
+  "Some tasks depend on equipment, in-person collaboration or customer contact, even within an otherwise remote-friendly role.",
+  "A remote default raises questions about mentorship, isolation and fair treatment of staff whose work must be on site."
+ ],
+ [
+  "Independent reading and practice exercises develop different skills, so replacing homework changes what students rehearse outside class.",
+  "Access to books, quiet space and adult support varies between households.",
+  "Reading progress can be difficult to assess without turning a flexible activity into another set of compulsory worksheets."
+ ],
+ [
+  "Students bring direct experience of what interests them and which parts of school feel relevant.",
+  "Curriculum design also requires subject expertise, sequencing and decisions about knowledge students have not yet encountered.",
+  "Student participation can range from choosing examples to controlling subjects, with different consequences for consistency."
+ ],
+ [
+  "Projects can reveal sustained research and application, whereas timed exams emphasize performance under a common time constraint.",
+  "Projects depend on access to resources and feedback over time, and may increase marking or supervision demands.",
+  "Both formats face questions about authorship, assistance and whether the assessment reflects an individual's understanding."
+ ],
+ [
+  "Financial choices involve budgeting, borrowing, saving and interpreting the costs of products and services.",
+  "A required subject competes for teaching time and needs materials that are independent of commercial promotion.",
+  "Financial outcomes also depend on income and opportunity, which classroom knowledge alone cannot determine."
+ ],
+ [
+  "School start times structure sleep opportunities, travel and family routines.",
+  "Changing the timetable can affect buses, staff schedules, childcare and students who work after school.",
+  "Later starts may shift sports and other activities further into the afternoon rather than remove scheduling pressure."
+ ],
+ [
+  "Learning an instrument involves listening, practice and coordination, alongside broader musical participation.",
+  "Instruments, tuition and suitable practice spaces have costs that families and schools may share unevenly.",
+  "A universal requirement needs room for different interests, physical needs and alternatives to instrumental performance."
+ ],
+ [
+  "Community service can connect classroom learning with local organizations and needs.",
+  "Placements require supervision, transport and accessible tasks, which can be harder for some students to arrange.",
+  "Compulsory service raises a distinction between completing required hours and developing a lasting commitment to others."
+ ],
+ [
+  "Online lectures can extend access to material beyond the students enrolled in a university.",
+  "Recording, captioning and maintaining lectures require resources and decisions about accessibility and reuse.",
+  "Lecture access is different from access to seminars, feedback, assessment or a recognized qualification."
+ ],
+ [
+  "Public transport can provide an alternative to private-car journeys, but its environmental value depends partly on which journeys it replaces.",
+  "Removing fares shifts costs toward public budgets or other funding sources, benefiting riders differently from people without usable routes.",
+  "Service frequency, coverage and capacity can matter as much as ticket price when people choose how to travel."
+ ],
+ [
+  "Repair extends a product's useful life, while recycling recovers some materials after that life ends.",
+  "Repair labor, spare parts and replacement prices influence whether households can afford to keep products in use.",
+  "Some products are difficult or unsafe to repair, making design standards and suitable exceptions important."
+ ],
+ [
+  "Renewable generation on public buildings connects energy policy with the design and operation of public assets.",
+  "Upfront installation costs and later energy savings may fall on different budgets and over different time horizons.",
+  "Roof space, building use and local conditions affect whether on-site generation is preferable to other clean-energy investments."
+ ],
+ [
+  "Road transport connects urban mobility with greenhouse-gas emissions, local air pollution and noise. Restricting private cars can change where and how those impacts occur.",
+  "Car restrictions affect commuters, delivery businesses and residents differently. People with limited transit access or mobility needs may face costs that other residents avoid.",
+  "A restricted zone needs workable public transport, delivery arrangements and accessibility exemptions. Traffic may move to surrounding streets if the wider transport network is overlooked."
+ ],
+ [
+  "Reusable packaging changes the flow of containers from single-use disposal to repeated collection, cleaning and redistribution.",
+  "The costs of containers, deposits and washing systems can fall on producers, retailers or customers.",
+  "Reuse depends on return rates, transport and sanitation; standardization also needs to accommodate different food products."
+ ],
+ [
+  "Native planting changes how public green space supports local habitats and responds to the conditions of a particular place.",
+  "Replacing lawns involves establishment and maintenance costs as well as differences in public expectations for usable space.",
+  "Sports areas, play spaces and paths need different surfaces and management from habitat-focused planting."
+ ],
+ [
+  "A low-carbon electricity system must address emissions as well as reliable supply when demand changes.",
+  "Nuclear projects involve financing, construction and long operating periods, while other energy options have different cost and timing profiles.",
+  "Waste management, accident preparedness and oversight are central to comparing nuclear power with other ways to provide electricity."
+ ],
+ [
+  "Frequent-flyer charges aim to distinguish repeated discretionary flying from occasional travel.",
+  "A charge may affect business travelers, people with family abroad and residents of places with few alternatives differently.",
+  "Administration needs a definition of frequent travel and a way to count flights without creating unnecessary privacy or enforcement burdens."
+ ],
+ [
+  "Tool lending extends a library's role from sharing information to sharing useful physical resources.",
+  "Borrowers gain access without owning every item, but availability and responsibility for damage need clear rules.",
+  "Storage, maintenance, training and insurance can compete with a library's existing services and budget."
+ ],
+ [
+  "Participatory budgeting gives residents a direct role in choosing some local spending priorities.",
+  "Participation requires time and accessible information, so the people who attend may not represent everyone affected.",
+  "A meaningful process must define the budget available and explain how selected projects will be delivered."
+ ],
+ [
+  "Temporary community use can bring activity to vacant premises while providing space for local groups.",
+  "Property owners, nearby residents and users can have different expectations about noise, access and the length of occupancy.",
+  "Short leases need arrangements for safety, insurance, upkeep and eventual relocation."
+ ],
+ [
+  "Pedestrian space supports walking, gathering and street activity, while parking serves a different use of limited public land.",
+  "Removing parking affects drivers, businesses, disabled travelers and residents who rely on nearby vehicle access.",
+  "Street redesign involves delivery access, transit connections and decisions about how to pay for construction and maintenance."
+ ],
+ [
+  "Community gardens combine food growing with shared use of public land.",
+  "Gardens can compete with other park activities, and not every resident has time or interest in maintaining a plot.",
+  "Allocation of plots, water access and continuing volunteer support influence who participates and whether a garden lasts."
+ ],
+ [
+  "Free museum entry lowers the price of visiting, but transport, opening hours and a sense of welcome also shape access.",
+  "Admission revenue can support collections, exhibitions and staff, so removing it requires another funding arrangement.",
+  "A museum may serve local residents, tourists and schools differently when deciding how public support should be used."
+ ],
+ [
+  "A common quiet period can support rest while changing the use of shared neighborhood space.",
+  "Shift workers, families, venues and people observing different routines may disagree about when quiet is most valuable.",
+  "Rules need boundaries for ordinary living sounds, emergencies and enforcement without placing an unfair burden on particular residents."
+ ],
+ [
+  "Essential services can become difficult to access when a smartphone app is the only practical route.",
+  "Some people cannot use a suitable device, while others prefer not to share data or maintain additional accounts.",
+  "Keeping telephone, in-person or paper routes available requires staffing and consistent service across channels."
+ ],
+ [
+  "Space missions can pursue scientific knowledge, infrastructure, exploration or commercial services, with different definitions of success.",
+  "Public agencies and private firms face different funding arrangements and responsibilities for sharing results.",
+  "Mission risk, international cooperation and dependence on contractors complicate a simple public-versus-private distinction."
+ ],
+ [
+  "Ocean exploration and crewed spaceflight investigate different environments and produce different kinds of knowledge.",
+  "Research budgets have opportunity costs, but comparing programs also requires attention to their scale and existing commitments.",
+  "Human crews, robotic missions and remote instruments offer different combinations of capability, cost and risk."
+ ],
+ [
+  "Research access affects who can read, check and build on findings supported by public money.",
+  "Publishing and maintaining scholarly work have costs, even when readers are not charged.",
+  "Open access can use several funding models, each affecting authors, institutions and readers differently."
+ ],
+ [
+  "Replication tests whether findings hold under repeated investigation; novel studies ask questions not previously answered in the same way.",
+  "Funding and career incentives can reward new results differently from careful confirmation or correction.",
+  "The value of replication depends on the importance, uncertainty and testability of the original claim."
+ ],
+ [
+  "A permanent lunar base would support sustained activity rather than isolated missions.",
+  "Construction, supply and long-term operations would commit resources beyond the initial mission budget.",
+  "Human safety, environmental stewardship and alternatives such as robotic missions shape the case for permanent occupation."
+ ],
+ [
+  "Citizen science can let students contribute observations or classifications to a wider research effort.",
+  "Participation depends on equipment, accessible tasks and feedback that connects classroom work with scientific methods.",
+  "Data quality, consent and the educational value of repetitive tasks need attention when choosing a project."
+ ],
+ [
+  "A grant lottery among qualified proposals separates the quality threshold from the final allocation decision.",
+  "Peer review and random allocation distribute discretion differently, affecting applicants and research institutions.",
+  "Eligibility standards and evaluation of outcomes determine whether a lottery broadens opportunity or overlooks meaningful differences."
+ ],
+ [
+  "Unresolved questions can show science as an ongoing process rather than a finished collection of answers.",
+  "Exhibitions need enough established knowledge for visitors to understand why an open question matters.",
+  "Presenting uncertainty requires care so that genuine research questions are not confused with unsupported claims."
+ ],
+ [
+  "Local journalism covers decisions and events that national outlets may not address in detail.",
+  "Public funding can support reporting while creating concerns about independence from the institutions being scrutinized.",
+  "Eligibility rules and oversight affect whether funding supports a range of voices or entrenches existing organizations."
+ ],
+ [
+  "Objects acquired through coercion connect museum collections with histories of ownership and unequal power.",
+  "Return claims can involve governments, communities and other institutions with different views of rightful custody.",
+  "Repatriation changes where objects are interpreted and displayed, while raising practical questions about documentation and care."
+ ],
+ [
+  "Payment disclosure concerns how subscription or advertising income reaches artists and other rights holders.",
+  "A transparent formula does not by itself determine a fair payment, especially when contracts divide revenue among several parties.",
+  "Platforms, established artists and emerging creators may benefit differently from alternative ways of allocating revenue."
+ ],
+ [
+  "Public art and major sporting events provide different forms of shared experience and visibility.",
+  "The costs of creation, event delivery and ongoing maintenance compete with other uses of public funding.",
+  "Deciding cultural priorities involves whose tastes and neighborhoods are represented, not only the size of the audience."
+ ],
+ [
+  "Anonymous judging seeks to focus attention on the work while limiting the influence of an author's reputation.",
+  "A work's content or style may still reveal aspects of identity, and complete anonymity can be difficult to maintain.",
+  "Some awards explicitly recognize a community or life experience, creating a tension between anonymity and their purpose."
+ ],
+ [
+  "Adaptations translate a story into a new medium with its own limits and expressive possibilities.",
+  "Creators must decide what fidelity means: preserving plot, tone, characters or the original work's underlying themes.",
+  "Audiences familiar with the source and those encountering the story for the first time may value different choices."
+ ],
+ [
+  "Historical films often combine documented events with dialogue or scenes created to tell a coherent story.",
+  "Labels can help distinguish invention from evidence, but too much interruption may change the viewing experience.",
+  "Public understanding of history can be shaped by memorable scenes even when a film is presented as entertainment."
+ ],
+ [
+  "Reserved space can give emerging artists opportunities that are difficult to obtain through established selection networks.",
+  "Local eligibility and the meaning of emerging need clear definitions to avoid excluding artists unfairly.",
+  "Institutions balance artistic judgment, audience interest and their responsibility to support the communities around them."
+ ],
+ [
+  "Honesty and care can point in different directions when a truthful statement may cause distress.",
+  "Medical news, ordinary social feedback and disclosures of wrongdoing involve very different stakes and responsibilities.",
+  "The effects of concealment depend partly on whether it protects someone or denies them information they need to decide."
+ ],
+ [
+  "Local giving emphasizes nearby relationships, while international giving may address needs beyond one's immediate community.",
+  "Comparing charities involves effectiveness, trust and the donor's ability to understand the circumstances of recipients.",
+  "A consistent approach to generosity must consider both special obligations to neighbors and the needs of distant strangers."
+ ],
+ [
+  "Competition rewards performance, but many games also depend on trust, coordination and shared rules.",
+  "Rewards for cooperation can change strategy and may be difficult to separate from collusion or superficial displays of helpfulness.",
+  "The design of incentives affects whether players see others mainly as opponents, teammates or partners in making the game worthwhile."
+ ],
+ [
+  "Paying for chores treats some household work as compensated effort, while unpaid chores frame it as a shared responsibility.",
+  "Children differ in age, ability and access to spending money, complicating a single payment rule.",
+  "A payment system can shape expectations about work that still needs doing when no reward is offered."
+ ],
+ [
+  "Debate practice can develop argument construction and listening, but winning an exchange is different from understanding an issue.",
+  "A required course needs to accommodate students who communicate in different ways or find public confrontation difficult.",
+  "Assessment choices determine whether the subject rewards evidence and reflection or mainly confidence and speed."
+ ],
+ [
+  "Recognition can encourage generosity while also making motives more difficult to interpret.",
+  "Anonymous help, public fundraising and reputation-building donations differ in how visibility contributes to their effects.",
+  "Judging an act can focus on the giver's intention, the recipient's benefit or the wider behavior it encourages."
+ ],
+ [
+  "Correcting a friend's claim involves commitments to accuracy alongside loyalty, autonomy and maintaining trust.",
+  "The seriousness of the claim, the evidence available and the setting can change whether a correction is helpful or harmful.",
+  "Private discussion, public correction and choosing not to engage have different consequences for the friend and the wider audience."
+ ],
+ [
+  "An apology can acknowledge responsibility, while an offer of repair addresses at least some effects of the harm.",
+  "Some harms cannot be undone, and a proposed remedy may not match what the affected person wants or needs.",
+  "A consistent expectation of repair must distinguish sincere effort from promises that are impossible or offered only to end the disagreement."
+ ]
+].map((contexts,i)=>[debateTopicLibrary[i].title,contexts]));
+
+// Individually authored main contexts, keyed by motion to remain stable when reordered.
+const topicMainContexts={
+ "Should AI-generated content always be labeled?": "Images, writing and audio can combine human decisions with machine-generated material. Mandatory labeling would make that involvement more visible, but the boundary between routine editing and generated authorship is not straightforward. The dispute concerns what audiences need to know and whether a universal label can communicate it meaningfully.",
+ "Should social platforms offer chronological feeds by default?": "A social feed can show posts in publication order or choose an order based on predicted interest. Making chronology the default shifts the starting point toward accounts a person deliberately follows, while potentially making useful older posts harder to discover. Users could still choose another view; the central question is which experience a platform should present first.",
+ "Should people own the data collected about them?": "Data collected through everyday services can become a resource for advertising, product development and analysis. Treating that information as personal property could give people stronger control over its use, but a record may concern several people and be copied or transformed many times. Ownership also differs from privacy rights that cannot simply be sold away.",
+ "Should schools teach students how to challenge AI answers?": "An AI answer can sound complete even when the underlying reasoning is weak or a cited source does not support it. Teaching students to question such answers would make verification part of ordinary schoolwork. The educational choice is how much attention to give this emerging tool alongside broader reading, reasoning and research skills.",
+ "Should public agencies use only open-source software?": "Public agencies depend on software for records, communication and services that residents may be required to use. An open-source-only rule would prioritize inspectable and modifiable systems over proprietary licensing. Its practical consequences depend on whether agencies can obtain suitable applications, support and security maintenance without excluding necessary specialized tools.",
+ "Should users have a legal right to repair their devices?": "Buying a device does not always provide the tools or information needed to repair it. A legal right to repair would change the relationship between product ownership and manufacturer control over maintenance. The policy has to reconcile longer usable life and independent repair with concerns about unsafe modifications, cybersecurity and responsibility for failures.",
+ "Should recommendation algorithms be independently audited?": "Recommendation algorithms help determine the visibility of posts, products and creators. Independent auditing would introduce outside scrutiny into systems normally evaluated by their operators. The debate concerns what an auditor could reliably establish, what access would be necessary and how findings should lead to accountability.",
+ "Should children’s apps be free of targeted advertising?": "Children's apps can fund their services by using information about users to select advertising. Prohibiting that form of targeting would separate access to an app from some commercial uses of children's activity. The choice involves both children's ability to understand persuasion and the funding models that would replace personalized advertising.",
+ "Should the standard workweek be four days?": "A four-day standard workweek could mean fewer total hours, or the same hours compressed into longer days; those are different proposals. Reducing hours without reducing weekly pay changes expectations about productivity and staffing. The debate turns on which workplaces could sustain the change and how its benefits and costs would reach hourly workers as well as salaried staff.",
+ "Should job advertisements always disclose salary ranges?": "Applicants often decide whether to pursue a role before knowing what it pays. Requiring salary ranges in advertisements would move part of the negotiation into public view and allow earlier comparisons. A useful policy would need to address ranges that are technically disclosed but too broad to guide a decision.",
+ "Should employees have a right to disconnect after work?": "Work communication can continue after a person's scheduled day has ended. A right to disconnect would limit the expectation of responding during personal time rather than necessarily prohibit sending a message. Different time zones, genuine emergencies and employee-controlled flexible hours make the boundaries of that right important.",
+ "Should companies share profits with their employees?": "Employees contribute to a company's results while usually receiving compensation through wages, salaries or individual incentives. Profit sharing would give them an additional collective stake in financial performance. The proposal raises questions about predictable income, how profits are measured and whether sharing upside should also expose workers to business volatility.",
+ "Should unpaid internships be prohibited?": "An unpaid internship can be presented as a learning opportunity while also supplying useful work to an organization. Prohibiting unpaid placements would establish a stronger compensation requirement, but might also change which organizations offer training positions. The key distinction is between access to genuine education and access to labor without wages.",
+ "Should hiring prioritize demonstrated skills over degrees?": "Hiring managers use qualifications, experience and direct demonstrations of ability to judge applicants. Prioritizing skills over degrees would reduce reliance on formal educational credentials as an initial filter. The alternative still needs credible ways to assess competence, particularly where a mistake can affect public safety or professional responsibility.",
+ "Should large companies give workers seats on their boards?": "Corporate boards make decisions about investment, leadership and the direction of a business. Giving workers seats would bring employees into a structure that often represents owners' interests more directly. The proposal concerns how workplace experience and financial ownership should influence decisions when their priorities diverge.",
+ "Should remote work be the default for suitable jobs?": "Some jobs can be performed away from a shared workplace, but organizations differ in how much attendance they expect. A remote-work default would place the burden on employers to justify office presence for suitable roles. The tradeoffs include access to employment, coordination, supervision and the experience of people whose work cannot be remote.",
+ "Should schools replace most homework with independent reading?": "Homework can reinforce lessons, while independent reading offers practice sustained by a student's own attention and interests. Replacing most homework with reading would change the balance between subject-specific exercises and broader literacy. Its value depends on student age, the subjects involved and the support available outside school.",
+ "Should students help design their school curriculum?": "School curricula are usually shaped by educators and public authorities rather than by the students following them. A larger student role could make learning feel more relevant and give young people experience of collective decisions. It also raises the question of how immediate interests should be balanced with foundational knowledge and future needs.",
+ "Should universities replace timed exams with projects?": "A timed exam captures performance during a fixed window; a project shows work developed over a longer period. Replacing exams with projects would change what universities reward and how students organize their effort. Fair assessment would have to account for access to help, resources and opportunities to revise work.",
+ "Should financial literacy be a required school subject?": "Financial literacy covers decisions that people may face about income, spending, credit and saving. Making it a required subject would guarantee curriculum time rather than leave exposure to families or optional courses. The question is what schools can usefully teach without implying that knowledge alone solves financial insecurity.",
+ "Should schools start later in the morning?": "The school day is linked to transport schedules, family routines and activities outside lessons. Moving its start later changes more than the time of the first class. A workable proposal needs to account for students' rest alongside the effects on childcare, commuting, staff and the end of the school day.",
+ "Should every student learn a musical instrument?": "Instrumental music requires repeated practice and gives students a direct role in producing sound with others or alone. Making it universal would turn an opportunity often offered selectively into a shared part of education. Implementation would need to respect varied interests and abilities while providing instruments and instruction rather than shifting those costs to families.",
+ "Should community service be required for graduation?": "A graduation service requirement makes contributing time to a community organization part of completing school. Supporters can view it as civic education, while critics may question whether compulsory hours cultivate voluntary commitment. The design matters when students have jobs, caring duties or limited access to suitable placements.",
+ "Should university lectures be freely available online?": "A university lecture can be made available beyond the classroom through recordings or other online materials. Free access would open part of a university's teaching to people who are not enrolled. It would not automatically provide tutorials, assessment or a qualification, so the proposal concerns one layer of educational access rather than an entire free degree.",
+ "Should cities make public transportation free?": "Fare-free public transport removes the ticket price from a traveler's immediate decision. It does not remove the cost of running the network or guarantee that a useful route exists. The debate concerns whether public money should prioritize free entry, better service, or a combination that makes alternatives to driving more practical.",
+ "Should governments prioritize repairing products over recycling them?": "Repair and recycling address different points in a product's life. Giving repair priority would focus policy on keeping items useful before recovering their materials as waste. That shift involves product design, spare parts, repair skills and the economic reasons households or businesses choose replacement instead.",
+ "Should new public buildings be required to generate renewable energy?": "Public construction offers an opportunity to incorporate energy generation when a building is planned. A renewable-generation requirement would make that opportunity an obligation rather than a case-by-case choice. Buildings differ in location, available space and energy demand, so the case for a universal rule must address when off-site clean energy might be a better option.",
+ "Should urban centers restrict private cars?": "Urban streets provide access to homes, jobs and businesses while also serving as shared public space. Limiting private cars could reduce some traffic-related harms and free space for other uses, but mobility needs would remain. The central issue is whether a city can offer practical alternatives and fair exceptions rather than simply displace traffic and inconvenience to neighboring areas.",
+ "Should food packaging use standardized reusable containers?": "Standardized reusable food containers would replace some single-use packaging with a shared return-and-cleaning system. Standardization could make containers easier to exchange across businesses, but would require coordination among producers, retailers and customers. The environmental and practical case depends on repeated use, safe cleaning and convenient returns.",
+ "Should cities replace decorative lawns with native plants?": "Decorative lawns and native planting serve different purposes in the urban landscape. Replacing some lawns would place more emphasis on habitat and locally suited vegetation, while changing the appearance and use of public green space. Decisions need to distinguish ornamental areas from places used for sports, play and informal gathering.",
+ "Should nuclear power be part of a low-carbon energy strategy?": "Reducing emissions from electricity generation requires choices about reliable supply, investment and infrastructure. Nuclear power offers a different set of operating characteristics and long-term obligations from wind, solar and other sources. The debate concerns its role within an energy mix, including construction timelines, waste stewardship and the alternatives available in a particular system.",
+ "Should frequent flyers pay higher environmental charges?": "A frequent-flyer charge would increase the cost of repeated flying rather than apply the same charge to every passenger. Its aim is to place a greater burden on intensive use of air travel, but frequency alone does not reveal why someone travels. The proposal needs a fair counting system and a clear account of how revenue or changed travel choices would serve environmental goals.",
+ "Should libraries lend tools and household equipment?": "Libraries already organize shared access to resources that individuals do not all need to own. Lending tools and household equipment extends that principle to objects requiring storage, maintenance and sometimes safety instruction. The debate concerns whether this is a useful extension of a library's public role or a diversion from services it is better equipped to provide.",
+ "Should residents directly decide part of their city’s budget?": "A city budget turns public priorities into spending commitments. Letting residents decide a portion directly would create a different route from electing representatives and responding to consultations. The value of the process depends on who participates, how choices are explained and whether the selected projects can actually be delivered.",
+ "Should vacant shops become temporary community spaces?": "An empty shop can remain unused while local groups struggle to find affordable space. Temporary community use connects those two circumstances without necessarily changing the property's long-term purpose. Agreements must balance immediate public value with costs, safety responsibilities and the uncertainty faced by groups that may later have to leave.",
+ "Should cities prioritize pedestrian space over parking?": "Street space is finite, and allocating it to parked vehicles limits other possible uses. Prioritizing pedestrians would put more weight on movement, access and public life outside cars. A credible redesign must still consider deliveries, disabled access and the needs of people for whom driving is currently the only workable option.",
+ "Should public parks host more community gardens?": "A community garden gives residents a place to grow food or plants and work alongside others. Putting more gardens in parks would allocate public land to an activity that requires sustained participation. The decision involves both potential community benefits and the claims of park users who want open space for different purposes.",
+ "Should local museums offer free admission?": "Museum admission charges contribute revenue while creating a price for access to collections and exhibitions. Free admission would remove that barrier, but the institution would still need funding and visitors might face other obstacles to attending. The debate is about how a local cultural institution should balance public access with the resources needed to care for and interpret its collections.",
+ "Should neighborhoods have a quiet hour every evening?": "A neighborhood quiet hour would create a shared expectation about sound at a particular time. Such a rule could support rest, but neighbors have different working hours, family needs and ideas about ordinary daily activity. Its fairness depends on reasonable limits and enforcement that distinguishes serious disturbance from unavoidable living sounds.",
+ "Should public services be available without smartphone apps?": "Moving services into apps can simplify some transactions while excluding people who cannot or do not wish to use them. Requiring a non-app route would protect alternative access to services that may be essential. The question is how to maintain that access without creating a slower or inferior service for the people who use it.",
+ "Should public agencies lead space exploration?": "Space exploration can be led through public missions, commercial ventures or partnerships between them. Public leadership places decisions within institutions expected to pursue collective goals, while commercial activity can bring different incentives and capabilities. The debate concerns who sets priorities and bears responsibility, not simply who builds the spacecraft.",
+ "Should ocean exploration receive more funding than crewed spaceflight?": "Ocean exploration and crewed spaceflight compete for attention while addressing different scientific questions. Giving ocean research more funding would express a priority between programs whose benefits are not measured in the same way. The comparison should distinguish scientific value from the particular costs and symbolism of sending humans into space.",
+ "Should publicly funded research be freely accessible?": "Public money can support research whose finished publications are difficult for some readers to access. Requiring free access would connect public funding with wider availability of its results. Publishing, quality control and preservation still require resources, so the policy must also consider who pays for those services.",
+ "Should scientists prioritize replication over novel findings?": "A new finding can attract attention before it is tested across further studies. Prioritizing replication would give greater weight to checking the reliability and limits of existing knowledge. The challenge is to strengthen confidence in research without neglecting the new questions that make scientific progress possible.",
+ "Should governments fund a permanent research base on the Moon?": "A permanent Moon base would turn a sequence of missions into an ongoing presence requiring supplies, maintenance and institutional commitment. Its case may involve science, exploration or technological development, but those objectives need to justify long-term spending. Robotic missions and temporary visits provide alternative ways to pursue some of the same aims.",
+ "Should citizen science be part of school science courses?": "Citizen-science projects allow people outside professional research teams to contribute to scientific work. Including them in school courses could connect lessons with a real investigation rather than a classroom exercise alone. A useful project must provide educational meaning as well as reliable data and manageable responsibilities for teachers.",
+ "Should research grants be partly allocated by lottery among qualified proposals?": "Research proposals can remain difficult to rank even after reviewers agree that several meet a strong quality threshold. A partial lottery would use chance for the final decision among qualified proposals instead of treating small ranking differences as decisive. The debate concerns fairness, uncertainty in evaluation and the kinds of research such a system would encourage.",
+ "Should science museums emphasize unresolved questions over established discoveries?": "A science museum can present well-established knowledge or invite visitors into questions researchers have not resolved. Emphasizing open questions could make the process of inquiry more visible. It also requires enough explanation to show the difference between productive uncertainty and a lack of evidence for a claim.",
+ "Should public funding support local journalism?": "Local reporting helps communities follow institutions and events close to home. Public support could sustain that work where commercial revenue is insufficient, but funding from public bodies introduces questions about editorial independence. The design of support matters as much as the decision to spend it.",
+ "Should museums return objects acquired through colonial coercion?": "Some museum objects are contested because the circumstances of acquisition involved coercion under colonial rule. Returning them would recognize claims that possession and legal documentation alone may not settle. The debate connects historical responsibility with present-day decisions about custody, access and who should interpret cultural heritage.",
+ "Should streaming platforms disclose how they pay artists?": "Streaming services distribute revenue through arrangements that listeners and artists may not fully understand. Disclosing payment methods would make the allocation more visible, but visibility alone does not settle what each participant should receive. The issue is whether transparency can improve accountability without obscuring the roles of contracts and other rights holders.",
+ "Should cities fund public art before major sporting events?": "Public art and major sporting events are both possible expressions of a city's identity, but their costs and benefits unfold differently. Giving art priority would favor one form of public cultural investment over another. The choice needs to consider lasting use, access and which residents' interests are represented in the spending decision.",
+ "Should book awards judge works without knowing the author’s identity?": "An author's reputation or identity can influence expectations before a judge reads a book. Anonymous judging would try to reduce that influence by focusing the initial decision on the work itself. The proposal becomes more complicated when an award's purpose includes recognizing particular communities or experiences.",
+ "Should adaptations prioritize faithfulness to the original story?": "Moving a story into a different medium requires choices about what to retain, remove or reinterpret. Faithfulness can mean preserving events, emotional tone or the source's central concerns, and those aims can conflict. The debate concerns which obligations an adaptation owes to an existing work while becoming a work of its own.",
+ "Should historical films clearly label invented scenes?": "Historical films use storytelling techniques that may blend documented events with invented detail. Clear labeling of invention could help audiences distinguish dramatic choices from historical evidence. The challenge is to communicate those distinctions usefully without suggesting that a short disclaimer resolves every question of interpretation.",
+ "Should cultural institutions reserve space for emerging local artists?": "Cultural institutions make choices about whose work receives space, attention and professional support. Reserving opportunities for emerging local artists would make community development an explicit part of that process. A fair policy needs meaningful definitions and a balance between opening doors and preserving room for varied artistic judgments.",
+ "Should honesty take priority over protecting someone’s feelings?": "Truthfulness and kindness are often compatible, but some situations put them in tension. Giving honesty priority would make accurate disclosure the stronger duty even when a person may be hurt by it. The force of that duty depends on what the information means for the other person's choices and whether withholding it is protection or paternalism.",
+ "Should people prioritize local charities over international charities?": "Charitable giving can express responsibility toward one's immediate community or toward people with greater needs elsewhere. Prioritizing local causes gives proximity a special moral role. The debate asks how that role should compare with effectiveness, urgency and obligations that extend beyond familiar places.",
+ "Should competitive games reward cooperation as much as individual performance?": "Games can reward individual achievement, coordinated teamwork or both. Giving cooperation equal weight would change what successful play looks like and which behaviors a game encourages. The proposal must distinguish cooperation that enriches the game from agreements that undermine fair competition.",
+ "Should parents pay children for household chores?": "Household chores are necessary work, but families differ in whether they link them to pocket money. Paying children can introduce earning and budgeting, while also suggesting that routine contributions deserve separate rewards. The debate concerns how families teach responsibility and recognize effort without making every shared obligation a transaction.",
+ "Should schools teach debate as a required life skill?": "Debating requires people to organize a case, listen to opposition and respond under constraints. Making it a required school subject would treat these practices as a general life skill rather than an extracurricular interest. The course would need to value careful reasoning and participation rather than equate argumentative confidence with understanding.",
+ "Should public recognition matter when judging an act of generosity?": "Generosity can be performed privately or made visible to others. Public recognition may encourage further giving, while also raising doubts about whether praise is the giver's main concern. The moral question is how much weight to place on motives compared with the benefit received and the example set.",
+ "Should people have a responsibility to challenge misinformation shared by friends?": "A misleading claim shared by a friend can create tension between preserving a relationship and correcting the information. Speaking up may help others assess the claim, but the setting and manner of correction can affect trust. The debate concerns when friendship creates a responsibility to intervene and when uncertainty, privacy or likely harm justifies another approach.",
+ "Should apologies always include a concrete offer to repair harm?": "An apology can express regret and acknowledge wrongdoing without changing the harm already caused. Requiring an offer of repair would connect that acknowledgment with a practical response. Such a requirement must account for harms that cannot be reversed and for the affected person's right to reject a proposed remedy."
+};
 
 /* Account presentation and admin controls. Server functions remain authoritative. */
 let accountRoles={admin:false,superadmin:false,admins:[]};

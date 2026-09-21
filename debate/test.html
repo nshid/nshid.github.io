@@ -264,6 +264,11 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 
 .round-clock-actions{display:flex;flex-direction:column;align-items:flex-end;gap:10px}.round-clock-actions>button{max-width:100%;white-space:normal}
 
+/* Keep lobby and private conversation content opaque in both themes. */
+#lobby.chat{background:var(--panel)}
+
+#quick-start{margin-top:14px;gap:10px;flex-wrap:wrap}
+
 html[data-theme=light]{color-scheme:light;--bg:#f6f8f3;--panel:#fff;--line:#cdd5c8;--muted:#52624d;--accent:#486f13;--red:#b92e38}
 html[data-theme=light] body{color:#172019}html[data-theme=light] :is(.topbar,.roundbar,dialog,.dialog-header,.dialog-footer,.site-footer,.chat-head,.composer,.settings-section,.test-table th){background:#fff;color:#172019;border-color:var(--line)}
 html[data-theme=light] :is(button,input,select,textarea){background:#f3f6ed;color:#172019;border-color:var(--line)}html[data-theme=light] :is(button.primary,a.primary,.primary,.logo){background:#d4f879;color:#172019}html[data-theme=light] :is(.feature,.ad){background:linear-gradient(135deg,#edf4de,#fff)}
