@@ -294,6 +294,9 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 
 #debates .debate-row:not(:has(details[open])){padding:7px 12px;margin:6px 0;row-gap:3px}#debates .debate-row:not(:has(details[open])) summary{min-height:28px}#debates .debate-row:not(:has(details[open])) .debate-row-action button{padding:5px 10px;min-height:28px}#debates .debate-row:not(:has(details[open])) .meta{margin-top:0}.reminder-toggle{font:inherit;padding:4px 7px}.chat-tab-actions{display:flex;flex-direction:column;border-left:1px solid var(--line)}.private-chat-tab .chat-tab-actions button{padding:0 6px;min-height:21px;line-height:20px}.inbox-tabs{align-items:center}.hidden-chats{display:inline-flex;align-items:center;gap:5px;padding:0;flex-wrap:wrap}.hidden-chats .restore-chat{margin:0;padding:6px 9px}.auth-forgot{margin-top:12px}.room-not-found{max-width:560px;margin:50px auto;padding:28px;line-height:1.7}.room-not-found h1{margin-bottom:14px}.room-not-found p{margin:12px 0 20px}
 
+/* Separate media connection notice from the participant roster. */
+#connection-status{margin-bottom:12px}
+
 html[data-theme=light]{color-scheme:light;--bg:#f6f8f3;--panel:#fff;--line:#cdd5c8;--muted:#52624d;--accent:#486f13;--red:#b92e38}
 html[data-theme=light] body{color:#172019}html[data-theme=light] :is(.topbar,.roundbar,dialog,.dialog-header,.dialog-footer,.site-footer,.chat-head,.composer,.settings-section,.test-table th){background:#fff;color:#172019;border-color:var(--line)}
 html[data-theme=light] :is(button,input,select,textarea){background:#f3f6ed;color:#172019;border-color:var(--line)}html[data-theme=light] :is(button.primary,a.primary,.primary,.logo){background:#d4f879;color:#172019}html[data-theme=light] :is(.feature,.ad){background:linear-gradient(135deg,#edf4de,#fff)}
@@ -303,7 +306,7 @@ html[data-theme=light] :is(.group,.dialog-tabs,.settings-tools){border-color:var
 
 html[data-theme=light] :is(label,.check,.pill,.nav a,.nav a.active){color:#52624d}html[data-theme=light] .waiting-fact{background:#eef4e3;color:#172019;border-color:#bbcea2}html[data-theme=light] #v2-chat{background:#fff;color:#172019}html[data-theme=light] .tile-timer{color:#d4f879}html[data-theme=light] :is(.seat,.banner-seat) .pill{color:#f3f4f4}html[data-theme=light] .context-drawer{background:#f6f8f3f2}html[data-theme=light] ::placeholder{color:#64705e;opacity:1}
 html[data-theme=light] .private-chat-tab button{background:transparent;color:inherit}
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head><body class="has-site-footer"><header class="topbar"></header><main class="shell" id="app"></main><footer class="site-footer">Openfloor · Live human and bot debates, AI-powered · Copyright <span id="copyright-year">2026</span> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></footer><script>document.querySelector("#copyright-year").textContent=new Date().getFullYear();
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head><body class="has-site-footer"><header class="topbar"></header><main class="shell" id="app"></main><footer class="site-footer">Openfloor · Live human and bot debates, AI-powered · Copyright <span id="copyright-year">2026</span> · <a href="/debate/privacy.html">Privacy</a> · <a href="/debate/terms.html">Terms</a></footer><script>document.querySelector("#copyright-year").textContent=new Date().getFullYear();
 // Public client configuration. This key grants only the access allowed by database policies.
 const SUPABASE_CONFIG = Object.freeze({
   url: 'https://tcntbgpofttsskukopin.supabase.co',
