@@ -283,6 +283,10 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 .room-chat-panel.chat-expanded{left:8px!important;top:8px!important;width:calc(100vw - 16px)!important;height:calc(100dvh - 16px)!important;resize:none}
 .composer{position:relative}.emoji-picker{position:absolute;bottom:100%;left:0;right:0;display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border:1px solid var(--line);z-index:2}.emoji-picker button{padding:8px}
 
+.review-explanation{padding-left:18px}.review-explanation li+li{margin-top:6px}
+
+.aura-effect{position:absolute;z-index:5;left:50%;top:45%;pointer-events:none;color:var(--accent);font-size:28px;font-weight:bold;text-shadow:0 1px 3px #000;animation:aura-rise 2.2s ease-out forwards}@keyframes aura-rise{to{transform:translateY(-65px);opacity:0}}@media(prefers-reduced-motion:reduce){.aura-effect{animation:none}}
+
 html[data-theme=light]{color-scheme:light;--bg:#f6f8f3;--panel:#fff;--line:#cdd5c8;--muted:#52624d;--accent:#486f13;--red:#b92e38}
 html[data-theme=light] body{color:#172019}html[data-theme=light] :is(.topbar,.roundbar,dialog,.dialog-header,.dialog-footer,.site-footer,.chat-head,.composer,.settings-section,.test-table th){background:#fff;color:#172019;border-color:var(--line)}
 html[data-theme=light] :is(button,input,select,textarea){background:#f3f6ed;color:#172019;border-color:var(--line)}html[data-theme=light] :is(button.primary,a.primary,.primary,.logo){background:#d4f879;color:#172019}html[data-theme=light] :is(.feature,.ad){background:linear-gradient(135deg,#edf4de,#fff)}
@@ -294,6 +298,16 @@ html[data-theme=light] :is(label,.check,.pill,.nav a,.nav a.active){color:#52624
 html[data-theme=light] .private-chat-tab button{background:transparent;color:inherit}
 
 html[data-theme=dark][data-dark-background=true] #network-background{display:block}html[data-theme=dark] #network-background line{stroke:#a0bd78;stroke-opacity:.18}html[data-theme=dark] #network-background circle{fill:#b6d38c;fill-opacity:.35}
+
+/* Sharper surfaces without spacing or camera changes. */
+html[data-surface="crisp"] :is(.pod,.panel,.card,.feature,.debate-row,.chat,.room-chat-panel,.context-drawer,.test-table-wrap,dialog){border-color:var(--muted);border-radius:4px}
+html[data-surface="crisp"] :is(button,input,select,textarea){border-radius:3px}
+html[data-surface="crisp"] :is(button:not(:disabled),input,select,textarea){border-color:var(--muted)}
+
+/* Material-inspired finish; preserves compact dimensions and colors. */
+html[data-surface="material"] :is(.pod,.panel,.card,.feature,.debate-row,.chat,.room-chat-panel,.context-drawer,.test-table-wrap,dialog){border-radius:12px;box-shadow:0 3px 12px #0003,0 1px 3px #0002}
+html[data-surface="material"][data-theme="light"] :is(.pod,.panel,.card,.feature,.debate-row,.chat,.room-chat-panel,.context-drawer,.test-table-wrap,dialog){box-shadow:0 3px 12px #00000012,0 1px 3px #00000018}
+html[data-surface="material"] :is(button,input,select,textarea){border-radius:9px}
 
 .legal{max-width:850px;margin:auto;padding:32px 22px 60px;line-height:1.75}.legal article{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:28px}.legal h1{margin-bottom:12px}.legal h2{margin:26px 0 10px}.legal p,.legal ul{margin:12px 0}.legal a{text-decoration:underline;overflow-wrap:anywhere}.legal nav{display:flex;flex-wrap:wrap;gap:20px;margin-bottom:22px}@media(prefers-color-scheme:light){:root{--bg:#f6f8f1;--panel:#fff;--line:#cdd5c4;--muted:#52604b;--accent:#496f0e}body{color:#1b241c}}@media(max-width:500px){.legal{padding:20px 12px}.legal article{padding:20px 16px}}</style></head><body><main class="legal"><nav aria-label="Site"><a href="/debate/">Openfloor</a><a href="/debate/privacy.html">Privacy</a><a href="/debate/terms.html">Terms</a></nav><article><h1>Terms of Service</h1><p class="muted">Last updated: September 23, 2026</p><p>These terms govern use of Openfloor, a live debate and discussion service at nshid.github.io/debate. By using the service, you agree to these terms. If you do not agree, do not use the service. Questions may be sent to the Openfloor operator at <a href="mailto:bazztech@usa.com">bazztech@usa.com</a>.</p>
 <h2>Accounts and participation</h2>
