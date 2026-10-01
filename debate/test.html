@@ -311,6 +311,10 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 
 .aura-effect{position:absolute;z-index:5;left:50%;top:45%;pointer-events:none;color:var(--accent);font-size:28px;font-weight:bold;text-shadow:0 1px 3px #000;animation:aura-rise 2.2s ease-out forwards}@keyframes aura-rise{to{transform:translateY(-65px);opacity:0}}@media(prefers-reduced-motion:reduce){.aura-effect{animation:none}}
 
+/* Shared columns keep interest controls aligned across topics and status lengths. */
+#debates .debate-row .meta{display:grid;grid-template-columns:145px 100px max-content minmax(0,1fr);align-items:center;gap:8px 12px}#debates .debate-row .meta>span{overflow-wrap:anywhere}#debates .debate-row .meta button{justify-self:start}
+@media(max-width:600px){#debates .debate-row .meta{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#debates .debate-row .meta .interest-toggle{grid-column:1}}
+
 html[data-theme=light]{color-scheme:light;--bg:#f6f8f3;--panel:#fff;--line:#cdd5c8;--muted:#52624d;--accent:#486f13;--red:#b92e38}
 html[data-theme=light] body{color:#172019}html[data-theme=light] :is(.topbar,.roundbar,dialog,.dialog-header,.dialog-footer,.site-footer,.chat-head,.composer,.settings-section,.test-table th){background:#fff;color:#172019;border-color:var(--line)}
 html[data-theme=light] :is(button,input,select,textarea){background:#f3f6ed;color:#172019;border-color:var(--line)}html[data-theme=light] :is(button.primary,a.primary,.primary,.logo){background:#d4f879;color:#172019}html[data-theme=light] :is(.feature,.ad){background:linear-gradient(135deg,#edf4de,#fff)}
