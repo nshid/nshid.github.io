@@ -292,6 +292,25 @@ button.device-controls{display:inline-flex;align-items:center;justify-content:ce
 @media(max-width:600px){#debates .debate-row .meta{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#debates .debate-row .meta .interest-toggle{grid-column:1}}
 
 #debates .debate-row .meta.my-debate-meta{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-width:600px){#debates .debate-row .meta.my-debate-meta{grid-template-columns:repeat(2,minmax(0,1fr))}#debates .my-debate-meta>span:last-child{grid-column:1 / -1}}
+/* Compact functional controls retain the approved theme and typography. */
+.versus-live > .room-chat-tab,.versus-live > .room-chat-panel{position:fixed;z-index:40}
+.versus-live > .room-chat-panel{font-size:13px;text-align:left}
+.system-message-list{display:grid;gap:8px;padding:12px;overflow:auto;max-height:380px}
+.system-message-row{display:grid;text-align:left;gap:5px;width:100%;padding:12px 14px;font-size:13px;line-height:1.5}
+.system-message-row time,.system-message-meta{font-size:12px;color:var(--muted)}
+.system-message-body{font-size:14px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;margin:16px 0}
+.system-message-tools{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.bet-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.bet-summary > div{border:1px solid var(--line);padding:12px;border-radius:6px;display:grid;gap:6px}
+.bet-summary small{color:var(--muted)}.bet-summary strong{font-size:18px}
+.bet-rules{padding-left:20px;font-size:12px;line-height:1.65;margin:12px 0}.bet-rules li{margin-bottom:6px}
+#debates .debate-row-action{display:flex;flex-direction:column;gap:6px;width:104px;grid-row:1 / span 2}
+#debates .debate-row .meta{padding-right:116px}
+#lobby{scroll-margin-block:80px}.messages{scroll-behavior:smooth;overflow-anchor:none}
+@media(prefers-reduced-motion:reduce){.messages{scroll-behavior:auto}}
+[data-grade-reader] [role="tab"][aria-selected="true"]{background:var(--accent);color:var(--bg)}
+@media(max-width:760px){#debates .debate-row-action{width:86px}#debates .debate-row .meta{padding-right:96px}}
+#debates .debate-row details{grid-column:1}#debates .debate-row summary{padding-right:0}#debates .debate-row .meta{grid-column:1;grid-row:2;padding-right:0}
 
 html[data-theme=light]{color-scheme:light;--bg:#f6f8f3;--panel:#fff;--line:#cdd5c8;--muted:#52624d;--accent:#486f13;--red:#b92e38}
 html[data-theme=light] body{color:#172019}html[data-theme=light] :is(.topbar,.roundbar,dialog,.dialog-header,.dialog-footer,.site-footer,.chat-head,.composer,.settings-section,.test-table th){background:#fff;color:#172019;border-color:var(--line)}
