@@ -1062,7 +1062,7 @@ async function showSystemMessage(id){if(!requireUser())return;const owner=identi
  const actions=dialog.querySelector('.dialog-actions'),tools=dialog.querySelector('.system-message-tools'),trash=tools.querySelector('button'),link=tools.querySelector('a');
  actions.classList.add('system-reader-actions');trash.classList.add('system-trash-action');trash.setAttribute('aria-label',m.trashed_at?'Restore message':'Move to trash');trash.title=m.trashed_at?'Restore message':'Move to trash';
  trash.innerHTML=m.trashed_at?'Restore message':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></svg>';
- actions.prepend(trash);if(m.debate_id){link.textContent='Open debate';link.className='system-open-debate';actions.insertBefore(link,actions.lastElementChild)}tools.remove();
+ actions.prepend(trash);if(m.debate_id){link.textContent='Open debate';link.className='system-open-debate';actions.insertBefore(link,actions.lastElementChild)}tools.remove();actions.querySelector('[data-close]')?.remove();
  const back=document.createElement('button');back.type='button';back.className='system-back';back.textContent='Back to messages';back.onclick=()=>showSystemInbox(systemInboxView.before,systemInboxView.trash,true);dialog.querySelector('.dialog-header').insertBefore(back,dialog.querySelector('.dialog-close'));
  const row=systemInboxView.rows.find(r=>String(r.id)===String(id));if(row)row.read_at=m.read_at;await refreshSystemInbox();if(!isRoom&&channel==='system')renderSystemInboxPanel();
  }catch(e){toast(cloudError(e))}}
