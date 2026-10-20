@@ -1386,7 +1386,7 @@ function setDraftSubtopics(subs){
 }
 
 /* Shared chat presentation. Message storage and room permissions remain in their existing paths. */
-const chatPresentation={lobbyHeight:360,roomHeight:360,lobbyRowsHeight:440,roomSuppressed:false,frame:0};
+const chatPresentation={lobbyHeight:360,roomHeight:360,roomSuppressed:false,frame:0};
 function chatDockIcon(){return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 6 6 18M6 8v10h10"/></svg>'}
 function chatGrip(){return '<div class="chat-height-grip" role="separator" aria-orientation="horizontal" aria-label="Resize chat height" tabindex="0" title="Drag to resize; Up and Down arrow keys also resize"></div>'}
 let lobbyFloating=false,lobbyExpanded=false,lobbyReturnFocus=null;
@@ -1406,7 +1406,7 @@ function updateChatPresentation(){
  const inVersus=roomChat&&panel.closest('.versus-live'),footerTop=inVersus?bottom:($('.site-footer')?.getBoundingClientRect().top??bottom),edge=Math.min(bottom,footerTop)-16;
  let expanded,inline=false,show=false,first=top+16;
  if(roomChat){if(!roomJoined||v2ChatLocked()){panel.classList.add('hidden');return}expanded=!!roomV2.chatExpanded;const end=$('#room-chat-end');const reached=!inVersus&&end&&end.getBoundingClientRect().top<edge-80;show=!!roomV2.chatOpen||!chatPresentation.roomSuppressed&&!!reached;}
- else {const rows=$('#debates'),slot=$('#lobby-slot');if(!rows||!slot){panel.classList.add('hidden');return}inline=filter==='The lobby';expanded=inline||lobbyExpanded;const rect=rows.getBoundingClientRect();first=Math.max(top+16,rect.top);if(!inline&&rect.height>0)chatPresentation.lobbyRowsHeight=Math.max(360,rect.height);show=inline||expanded||rect.bottom<=edge-92;if(inline){if(panel.parentNode!==slot)slot.append(panel);slot.style.height=chatPresentation.lobbyRowsHeight+'px'}else{if(panel.parentNode!==document.body)document.body.append(panel);slot.style.height='110px'}lobbyFloating=!inline;}
+ else {const rows=$('#debates'),slot=$('#lobby-slot');if(!rows||!slot){panel.classList.add('hidden');return}inline=filter==='The lobby';expanded=inline||lobbyExpanded;const rect=rows.getBoundingClientRect();first=Math.max(top+16,rect.top);show=inline||expanded||rect.bottom<=edge-92;if(inline){if(panel.parentNode!==slot)slot.append(panel);slot.style.height='360px'}else{if(panel.parentNode!==document.body)document.body.append(panel);slot.style.height='110px'}lobbyFloating=!inline;}
  if(!roomChat&&!expanded&&!panel.querySelector('.composer'))show=false;panel.classList.add('progressive-chat');panel.classList.toggle('hidden',!show);panel.classList.toggle('chat-inline',inline);panel.classList.toggle('chat-compact',!expanded);panel.classList.toggle('chat-open',expanded);
  if(!show)return;
  if(inline){panel.style.cssText='';return}
