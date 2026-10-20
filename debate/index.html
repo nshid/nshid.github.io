@@ -389,7 +389,7 @@ html[data-theme="light"] #featured-card[data-highlight-kind="sponsored"]{backgro
 .progressive-chat .chat-head{padding:10px 14px;flex:none;cursor:default}.progressive-chat h2,.progressive-chat h3{font-size:14px;margin:0}.progressive-chat .chat-head button{padding:7px;display:grid;place-items:center}
 .progressive-chat #chat-content{display:flex;flex-direction:column;min-height:0;flex:1}.progressive-chat .messages{height:auto;min-height:0;flex:1;overflow:auto;overscroll-behavior:contain}.progressive-chat .composer{flex:none;padding:10px;position:relative;margin:0;background:var(--panel);border-top:1px solid var(--line)}.progressive-chat .composer input{flex:1;min-width:0}.progressive-chat .inbox-tabs{flex:none;max-height:100px;overflow:auto}
 #lobby.chat-compact,#v2-chat.chat-compact{opacity:var(--chat-opacity,.25);box-shadow:none;background:transparent}#lobby.chat-compact:hover,#lobby.chat-compact:focus-within,#v2-chat.chat-compact:hover,#v2-chat.chat-compact:focus-within{opacity:1;background:var(--panel)}.chat-compact .chat-head,.chat-compact .chat-height-grip,.chat-compact .messages,.chat-compact .inbox-tabs,.chat-compact #chat-new{display:none}.chat-compact #chat-content{justify-content:flex-end}
-#lobby-slot{position:relative;min-height:110px}#lobby.progressive-chat.chat-inline{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;box-shadow:none}.chat-inline .chat-height-grip{display:none}.chat-inline .composer{transform:none}.chat-inline .messages{padding-bottom:80px}
+#lobby-slot{position:relative;min-height:110px}#lobby.progressive-chat.chat-inline{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;box-shadow:none}.chat-inline .chat-height-grip{display:none}.chat-inline .composer{transform:none}
 .chat-height-grip{height:12px;flex:none;cursor:ns-resize;touch-action:none;display:flex;justify-content:center;align-items:center}.chat-height-grip:after{content:'';width:40px;height:3px;border-radius:3px;background:var(--muted)}#room-chat-end{height:110px;pointer-events:none}.progressive-chat .emoji-picker{position:absolute;bottom:100%;left:0;right:0;display:flex;flex-direction:column;gap:8px;max-height:240px;padding:12px;background:var(--panel);border:1px solid var(--line);z-index:6}.emoji-search{width:100%;flex:none!important}.emoji-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:4px;overflow:auto;min-height:0}.emoji-grid button{font-size:22px;padding:4px;background:transparent}.emoji-picker small{font-size:11px}.progressive-chat:has(.emoji-picker) .messages{visibility:hidden}
 @media(prefers-reduced-motion:reduce){#lobby.progressive-chat,#v2-chat.progressive-chat{transition:none}}
 
@@ -400,6 +400,15 @@ html[data-theme="light"] #featured-card[data-highlight-kind="sponsored"]{backgro
 @media(max-width:600px){#debates .debate-row:not(:has(details[open])) .meta{display:flex;flex-wrap:wrap;gap:4px 8px}#debates .debate-row:not(:has(details[open])) .meta>span{font-size:11px}}
 
 @media(max-width:600px){#debates .debate-row:not(:has(details[open])) .meta{grid-column:1/-1;margin-left:0}#debates .debate-row:not(:has(details[open])) .debate-row-action{grid-row:1}}
+
+/* Keep system inbox controls aligned and reserve the remaining Lobby space for messages. */
+#lobby.progressive-chat .system-message-tools{flex:none;margin:0;padding:4px 12px;gap:6px}
+#lobby.progressive-chat .system-message-tools button{padding:6px 10px;font-size:12px}
+#lobby.progressive-chat #chat-content>.field-help{flex:none;margin:0;padding:6px 12px;font-size:11px;line-height:1.4}
+#lobby.progressive-chat .system-message-list{flex:1;min-height:0;max-height:none;align-content:start;grid-auto-rows:max-content;padding:8px 12px 12px;overscroll-behavior:contain}
+#lobby.progressive-chat .system-message-row{padding:9px 11px;font-size:12px;overflow-wrap:anywhere}
+#lobby.progressive-chat .system-message-row time{font-size:11px}
+#lobby.progressive-chat #chat-content>.system-message-list+button{flex:none;align-self:flex-start;margin:4px 12px 8px;padding:5px 10px}
 
 html[data-theme=light]{color-scheme:light;--bg:#f6f8f3;--panel:#fff;--line:#cdd5c8;--muted:#52624d;--accent:#486f13;--red:#b92e38}
 html[data-theme=light] body{color:#172019}html[data-theme=light] :is(.topbar,.roundbar,dialog,.dialog-header,.dialog-footer,.site-footer,.chat-head,.composer,.settings-section,.test-table th){background:#fff;color:#172019;border-color:var(--line)}
