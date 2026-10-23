@@ -499,6 +499,14 @@ html[data-platform-design=elevated][data-design-focus=true] .columns:has(>aside>
 html[data-platform-design=elevated][data-design-focus=true] .columns>aside:has(.el-focused)>.pod:not(.el-focused):not(.el-empty)>:not(h3):not(.row):not(.el-panel-toggle){display:none}
 html[data-platform-design=elevated][data-design-focus=false] .el-panel-toggle{display:none}
 @media(max-width:760px){html[data-platform-design=elevated][data-design-focus=true] .columns:has(>aside>.el-focused){grid-template-columns:minmax(0,1fr)}}
+
+/* Inset Aura controls consistently with the camera stage, including beside chat. */
+html[data-platform-design=elevated] #aura-panel{margin:0 12px 12px;padding:12px 14px;min-width:0;grid-column:1/-1;border-radius:var(--el-inner)}
+html[data-platform-design=elevated] #aura-panel h3{margin:0 0 8px;font-size:13px}
+html[data-platform-design=elevated] #aura-controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0}
+html[data-platform-design=elevated] #aura-controls .field-help{flex:1 1 280px;margin:0;line-height:1.5;overflow-wrap:anywhere}
+html[data-platform-design=elevated] #aura-controls button{font-size:11px;padding:7px 10px;max-width:100%;white-space:normal}
+@media(max-width:600px){html[data-platform-design=elevated] #aura-panel{margin:0 6px 8px;padding:10px}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script></head><body class="has-site-footer"><header class="topbar"></header><main class="shell" id="app"></main><footer class="site-footer">Openfloor · Live human and bot debates, AI-powered · Copyright <span id="copyright-year">2026</span> · <a href="/debate/aura/">Aura studio (demo)</a> · <a href="/debate/privacy.html">Privacy</a> · <a href="/debate/terms.html">Terms</a></footer><script>document.querySelector("#copyright-year").textContent=new Date().getFullYear();
 // Public client configuration. This key grants only the access allowed by database policies.
 const SUPABASE_CONFIG = Object.freeze({

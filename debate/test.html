@@ -500,6 +500,14 @@ html[data-platform-design=elevated][data-design-focus=true] .columns>aside:has(.
 html[data-platform-design=elevated][data-design-focus=false] .el-panel-toggle{display:none}
 @media(max-width:760px){html[data-platform-design=elevated][data-design-focus=true] .columns:has(>aside>.el-focused){grid-template-columns:minmax(0,1fr)}}
 
+/* Inset Aura controls consistently with the camera stage, including beside chat. */
+html[data-platform-design=elevated] #aura-panel{margin:0 12px 12px;padding:12px 14px;min-width:0;grid-column:1/-1;border-radius:var(--el-inner)}
+html[data-platform-design=elevated] #aura-panel h3{margin:0 0 8px;font-size:13px}
+html[data-platform-design=elevated] #aura-controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0}
+html[data-platform-design=elevated] #aura-controls .field-help{flex:1 1 280px;margin:0;line-height:1.5;overflow-wrap:anywhere}
+html[data-platform-design=elevated] #aura-controls button{font-size:11px;padding:7px 10px;max-width:100%;white-space:normal}
+@media(max-width:600px){html[data-platform-design=elevated] #aura-panel{margin:0 6px 8px;padding:10px}}
+
 .test-table-wrap{overflow:auto;margin-top:16px;border:1px solid var(--line);border-radius:8px}
 .test-table{table-layout:fixed;width:100%;border-collapse:collapse;font-size:12px;min-width:800px}
 .test-table th,.test-table td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}

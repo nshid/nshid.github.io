@@ -474,6 +474,14 @@ html[data-platform-design=elevated][data-design-focus=true] .columns>aside:has(.
 html[data-platform-design=elevated][data-design-focus=false] .el-panel-toggle{display:none}
 @media(max-width:760px){html[data-platform-design=elevated][data-design-focus=true] .columns:has(>aside>.el-focused){grid-template-columns:minmax(0,1fr)}}
 
+/* Inset Aura controls consistently with the camera stage, including beside chat. */
+html[data-platform-design=elevated] #aura-panel{margin:0 12px 12px;padding:12px 14px;min-width:0;grid-column:1/-1;border-radius:var(--el-inner)}
+html[data-platform-design=elevated] #aura-panel h3{margin:0 0 8px;font-size:13px}
+html[data-platform-design=elevated] #aura-controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0}
+html[data-platform-design=elevated] #aura-controls .field-help{flex:1 1 280px;margin:0;line-height:1.5;overflow-wrap:anywhere}
+html[data-platform-design=elevated] #aura-controls button{font-size:11px;padding:7px 10px;max-width:100%;white-space:normal}
+@media(max-width:600px){html[data-platform-design=elevated] #aura-panel{margin:0 6px 8px;padding:10px}}
+
 .legal{max-width:850px;margin:auto;padding:32px 22px 60px;line-height:1.75}.legal article{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:28px}.legal h1{margin-bottom:12px}.legal h2{margin:26px 0 10px}.legal p,.legal ul{margin:12px 0}.legal a{text-decoration:underline;overflow-wrap:anywhere}.legal nav{display:flex;flex-wrap:wrap;gap:20px;margin-bottom:22px}@media(prefers-color-scheme:light){:root{--bg:#f6f8f1;--panel:#fff;--line:#cdd5c4;--muted:#52604b;--accent:#496f0e}body{color:#1b241c}}@media(max-width:500px){.legal{padding:20px 12px}.legal article{padding:20px 16px}}</style></head><body><main class="legal"><nav aria-label="Site"><a href="/debate/">Openfloor</a><a href="/debate/privacy.html">Privacy</a><a href="/debate/terms.html">Terms</a></nav><article><h1>Terms of Service</h1><p class="muted">Last updated: October 8, 2026</p><p>These terms govern use of Openfloor, a live debate and discussion service at nshid.github.io/debate. By using the service, you agree to these terms. If you do not agree, do not use the service. Questions may be sent to the Openfloor operator at <a href="mailto:bazztech@usa.com">bazztech@usa.com</a>.</p>
 <h2>Accounts and participation</h2>
 <p>Provide accurate account information, protect your sign-in credentials and use only accounts you are authorized to access. You must be at least 13 and meet any higher minimum age required in your location. If you are not legally able to agree to these terms on your own, obtain permission from a parent or guardian. You are responsible for your participation and content.</p>
